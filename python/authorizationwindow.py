@@ -8,12 +8,17 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_authorization_window(object):
+
+class UiAuthorizationWindow(object):
     def setupUi(self, authorization_window):
         authorization_window.setObjectName("authorization_window")
         authorization_window.resize(481, 271)
+        authorization_window.setMinimumHeight(271)
+        authorization_window.setMinimumWidth(481)
+        authorization_window.setMaximumHeight(271)
+        authorization_window.setMaximumWidth(481)
         authorization_window.setAutoFillBackground(False)
-        authorization_window.setStyleSheet("background-color: rgb(51, 102, 204);")
+        authorization_window.setStyleSheet("background-color: rgb(0, 51, 102);")
         self.centralwidget = QtWidgets.QWidget(authorization_window)
         self.centralwidget.setObjectName("centralwidget")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
@@ -27,20 +32,20 @@ class Ui_authorization_window(object):
         self.lineEdit.setText("")
         self.lineEdit.setObjectName("lineEdit")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(90, 103, 51, 16))
+        self.label.setGeometry(QtCore.QRect(90, 100, 61, 16))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(12)
+        font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
         self.label.setFont(font)
         self.label.setStyleSheet("color: rgb(255, 255, 255);")
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(90, 143, 61, 16))
+        self.label_2.setGeometry(QtCore.QRect(73, 140, 81, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(12)
+        font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
         self.label_2.setFont(font)
@@ -50,7 +55,7 @@ class Ui_authorization_window(object):
         self.lineEdit_2.setGeometry(QtCore.QRect(170, 140, 221, 24))
         font = QtGui.QFont()
         font.setFamily("Dubai")
-        font.setPointSize(12)
+        font.setPointSize(14)
         self.lineEdit_2.setFont(font)
         self.lineEdit_2.setAutoFillBackground(False)
         self.lineEdit_2.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -71,14 +76,15 @@ class Ui_authorization_window(object):
         self.pushButton.setGeometry(QtCore.QRect(175, 190, 131, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(12)
+        font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
         self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+        self.pushButton.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(125,125,125,1));\n"
 "border-color: rgb(102, 102, 102);\n"
 "border: 2px solid rgb(102, 102, 102);\n"
-"border-radius: 6px;")
+"border-radius: 6px;\n"
+"")
         self.pushButton.setObjectName("pushButton")
         authorization_window.setCentralWidget(self.centralwidget)
 
@@ -98,7 +104,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     authorization_window = QtWidgets.QMainWindow()
-    ui = Ui_authorization_window()
+    ui = UiAuthorizationWindow()
     ui.setupUi(authorization_window)
     authorization_window.show()
     sys.exit(app.exec_())

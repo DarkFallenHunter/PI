@@ -15,291 +15,304 @@ CREATE SCHEMA IF NOT EXISTS `CRMPI` DEFAULT CHARACTER SET utf8 ;
 USE `CRMPI` ;
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`3D model`
+-- Table `CRMPI`.`3d_model`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`3D model` (
-  `idModel` INT NOT NULL AUTO_INCREMENT,
-  `Model file` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idModel`))
+CREATE TABLE IF NOT EXISTS `CRMPI`.`3d_model` (
+  `model_id` INT NOT NULL,
+  `model_file` VARCHAR(90) NOT NULL,
+  PRIMARY KEY (`model_id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Client`
+-- Table `CRMPI`.`client`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Client` (
-  `Surname` VARCHAR(30) NOT NULL,
-  `Name` VARCHAR(30) NOT NULL,
-  `Отчество` VARCHAR(45) NOT NULL,
-  `Telephone number` VARCHAR(16) NOT NULL,
-  `Email` VARCHAR(45) NOT NULL,
-  `idClient` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`idClient`))
+CREATE TABLE IF NOT EXISTS `CRMPI`.`client` (
+  `surname` VARCHAR(30) NOT NULL,
+  `name` VARCHAR(30) NOT NULL,
+  `patronymic` VARCHAR(45) NOT NULL,
+  `telephone_number` VARCHAR(16) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `client_id` INT NOT NULL,
+  PRIMARY KEY (`client_id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Order`
+-- Table `CRMPI`.`order`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Order` (
-  `Status of the order` VARCHAR(45) NOT NULL,
-  `Order number` INT NOT NULL AUTO_INCREMENT,
-  `Price` DECIMAL(8,2) NOT NULL,
-  `idClient` INT NOT NULL,
-  `idModel` INT NOT NULL,
-  `Short description` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`Order number`),
-  INDEX `idМодели_idx` (`idModel` ASC) VISIBLE,
-  INDEX `idКлиента_idx` (`idClient` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `CRMPI`.`order` (
+  `status` VARCHAR(45) NOT NULL,
+  `order_number` INT NOT NULL,
+  `price` DECIMAL(8,2) NOT NULL,
+  `client_id` INT NOT NULL,
+  `model_id` INT NOT NULL,
+  `short_description` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`order_number`),
+  INDEX `idМодели_idx` (`model_id` ASC) VISIBLE,
+  INDEX `idКлиента_idx` (`client_id` ASC) VISIBLE,
   CONSTRAINT `ModelOrderFK`
-    FOREIGN KEY (`idModel`)
-    REFERENCES `CRMPI`.`3D model` (`idModel`)
+    FOREIGN KEY (`model_id`)
+    REFERENCES `CRMPI`.`3d_model` (`model_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `CloeintOrderFK`
-    FOREIGN KEY (`idClient`)
-    REFERENCES `CRMPI`.`Client` (`idClient`)
+    FOREIGN KEY (`client_id`)
+    REFERENCES `CRMPI`.`client` (`client_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Order modification`
+-- Table `CRMPI`.`order_modification`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Order modification` (
-  `Order number` INT NOT NULL AUTO_INCREMENT,
-  `What needs a modification` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`Order number`),
+CREATE TABLE IF NOT EXISTS `CRMPI`.`order_modification` (
+  `order_number` INT NOT NULL,
+  `mark` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`order_number`),
   CONSTRAINT `OrderModificationFK`
-    FOREIGN KEY (`Order number`)
-    REFERENCES `CRMPI`.`Order` (`Order number`)
+    FOREIGN KEY (`order_number`)
+    REFERENCES `CRMPI`.`order` (`order_number`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Material`
+-- Table `CRMPI`.`material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Material` (
-  `Type` VARCHAR(45) NOT NULL,
-  `Color` VARCHAR(45) NOT NULL,
-  `idMaterial` INT NOT NULL,
-  PRIMARY KEY (`idMaterial`))
+CREATE TABLE IF NOT EXISTS `CRMPI`.`material` (
+  `type` VARCHAR(45) NOT NULL,
+  `color` VARCHAR(45) NOT NULL,
+  `material_id` INT NOT NULL,
+  PRIMARY KEY (`material_id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Order material`
+-- Table `CRMPI`.`order_material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Order material` (
-  `Order number` INT NOT NULL,
-  `idMaterial` INT NOT NULL,
-  PRIMARY KEY (`Order number`, `idMaterial`),
-  INDEX `МатериалМатериалзаказаFK_idx` (`idMaterial` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `CRMPI`.`order_material` (
+  `order_number` INT NOT NULL,
+  `material_id` INT NOT NULL,
+  PRIMARY KEY (`order_number`, `material_id`),
+  INDEX `МатериалМатериалзаказаFK_idx` (`material_id` ASC) VISIBLE,
   CONSTRAINT `OrderOrdermaterialFK`
-    FOREIGN KEY (`Order number`)
-    REFERENCES `CRMPI`.`Order` (`Order number`)
+    FOREIGN KEY (`order_number`)
+    REFERENCES `CRMPI`.`order` (`order_number`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `MaterialOrdermaterialFK`
-    FOREIGN KEY (`idMaterial`)
-    REFERENCES `CRMPI`.`Material` (`idMaterial`)
+    FOREIGN KEY (`material_id`)
+    REFERENCES `CRMPI`.`material` (`material_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Employee`
+-- Table `CRMPI`.`employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Employee` (
-  `idEmployee` INT NOT NULL,
-  `Surname` VARCHAR(45) NOT NULL,
-  `Name` VARCHAR(45) NOT NULL,
-  `Middle name` VARCHAR(45) NOT NULL,
-  `Status` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idEmployee`))
+CREATE TABLE IF NOT EXISTS `CRMPI`.`employee` (
+  `employee_id` INT NOT NULL,
+  `surname` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `patronymic` VARCHAR(45) NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`employee_id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Request`
+-- Table `CRMPI`.`request`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Request` (
-  `Request number` INT NOT NULL,
-  PRIMARY KEY (`Request number`))
+CREATE TABLE IF NOT EXISTS `CRMPI`.`request` (
+  `request_number` INT NOT NULL,
+  PRIMARY KEY (`request_number`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Request employee`
+-- Table `CRMPI`.`request_employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Request employee` (
-  `idEmployee` INT NOT NULL,
-  `Request number` INT NOT NULL,
-  PRIMARY KEY (`idEmployee`, `Request number`),
-  INDEX `ЗаявкаСотрзаявкиFK_idx` (`Request number` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `CRMPI`.`request_employee` (
+  `employee_id` INT NOT NULL,
+  `request_number` INT NOT NULL,
+  PRIMARY KEY (`employee_id`, `request_number`),
+  INDEX `ЗаявкаСотрзаявкиFK_idx` (`request_number` ASC) VISIBLE,
   CONSTRAINT `EmployeeRequestemployeeFK`
-    FOREIGN KEY (`idEmployee`)
-    REFERENCES `CRMPI`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `CRMPI`.`employee` (`employee_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `RequestRequestempoyeeFK`
-    FOREIGN KEY (`Request number`)
-    REFERENCES `CRMPI`.`Request` (`Request number`)
+    FOREIGN KEY (`request_number`)
+    REFERENCES `CRMPI`.`request` (`request_number`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Order employee`
+-- Table `CRMPI`.`order_employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Order employee` (
-  `Order number` INT NOT NULL,
-  `idEmployee` INT NOT NULL,
-  PRIMARY KEY (`Order number`, `idEmployee`),
-  INDEX `СотрудникиСотрузаказаFK_idx` (`idEmployee` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `CRMPI`.`order_employee` (
+  `order_number` INT NOT NULL,
+  `employee_id` INT NOT NULL,
+  PRIMARY KEY (`order_number`, `employee_id`),
+  INDEX `СотрудникиСотрузаказаFK_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `EmployeeOrderemployeeFK`
-    FOREIGN KEY (`idEmployee`)
-    REFERENCES `CRMPI`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `CRMPI`.`employee` (`employee_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `OrderOrderemployeeFK`
-    FOREIGN KEY (`Order number`)
-    REFERENCES `CRMPI`.`Order` (`Order number`)
+    FOREIGN KEY (`order_number`)
+    REFERENCES `CRMPI`.`order` (`order_number`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Access`
+-- Table `CRMPI`.`access`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Access` (
-  `idEmployee` INT NOT NULL,
-  `Login` VARCHAR(45) NOT NULL,
-  `Password` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idEmployee`),
+CREATE TABLE IF NOT EXISTS `CRMPI`.`access` (
+  `employee_id` INT NOT NULL,
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`employee_id`),
   CONSTRAINT `EmployeeAccessFK`
-    FOREIGN KEY (`idEmployee`)
-    REFERENCES `CRMPI`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `CRMPI`.`employee` (`employee_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Provider`
+-- Table `CRMPI`.`delivery`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Provider` (
-  `Company name` VARCHAR(45) NOT NULL,
-  `Product` VARCHAR(45) NOT NULL,
-  `idProvider` INT NOT NULL,
-  PRIMARY KEY (`idProvider`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `CRMPI`.`Delivery`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Delivery` (
-  `idSupplier` INT NOT NULL,
-  `idProvider` INT NOT NULL,
-  `Contract number` INT NOT NULL,
-  PRIMARY KEY (`idSupplier`, `idProvider`),
-  INDEX `ПоставщикПоставкиFK_idx` (`idProvider` ASC) VISIBLE,
-  CONSTRAINT `ProviderDeliveryFK`
-    FOREIGN KEY (`idProvider`)
-    REFERENCES `CRMPI`.`Provider` (`idProvider`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+CREATE TABLE IF NOT EXISTS `CRMPI`.`delivery` (
+  `supplier_id` INT NOT NULL,
+  `contract_number` INT NOT NULL,
+  PRIMARY KEY (`contract_number`),
   CONSTRAINT `EmpoyeeDeliveryFK`
-    FOREIGN KEY (`idSupplier`)
-    REFERENCES `CRMPI`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`supplier_id`)
+    REFERENCES `CRMPI`.`employee` (`employee_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Extra information`
+-- Table `CRMPI`.`provider`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Extra information` (
-  `idOrder` INT NOT NULL,
-  `Extra information about the order` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`idOrder`),
+CREATE TABLE IF NOT EXISTS `CRMPI`.`provider` (
+  `company_name` VARCHAR(45) NOT NULL,
+  `product` VARCHAR(45) NOT NULL,
+  `provider_id` INT NOT NULL,
+  PRIMARY KEY (`provider_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CRMPI`.`extra_information`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CRMPI`.`extra_information` (
+  `order_number` INT NOT NULL,
+  `info` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`order_number`),
   CONSTRAINT `OrderExtrainfoFK`
-    FOREIGN KEY (`idOrder`)
-    REFERENCES `CRMPI`.`Order` (`Order number`)
+    FOREIGN KEY (`order_number`)
+    REFERENCES `CRMPI`.`order` (`order_number`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Infomation about materials`
+-- Table `CRMPI`.`information_about_material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Infomation about materials` (
-  `idMaterial` INT NOT NULL,
-  `Color` VARCHAR(45) NOT NULL,
-  `Type` VARCHAR(45) NOT NULL,
-  `Diameter of the strand` INT NOT NULL,
-  PRIMARY KEY (`idMaterial`))
+CREATE TABLE IF NOT EXISTS `CRMPI`.`information_about_material` (
+  `material_id` INT NOT NULL,
+  `color` VARCHAR(45) NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `diameter_of_the_strand` INT NOT NULL,
+  PRIMARY KEY (`material_id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Amount of material`
+-- Table `CRMPI`.`amount_of_material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Amount of material` (
-  `idMaterial` INT NOT NULL,
-  `Amount` INT NOT NULL,
-  PRIMARY KEY (`idMaterial`),
+CREATE TABLE IF NOT EXISTS `CRMPI`.`amount_of_material` (
+  `material_id` INT NOT NULL,
+  `amount` INT NOT NULL,
+  PRIMARY KEY (`material_id`),
   CONSTRAINT `InfoaboutmaterailAmountofmaterialFK`
-    FOREIGN KEY (`idMaterial`)
-    REFERENCES `CRMPI`.`Infomation about materials` (`idMaterial`)
+    FOREIGN KEY (`material_id`)
+    REFERENCES `CRMPI`.`information_about_material` (`material_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Request material`
+-- Table `CRMPI`.`request_material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Request material` (
-  `idMaterial` INT NOT NULL,
-  `Request number` INT NOT NULL,
-  `Amount` INT NOT NULL,
-  PRIMARY KEY (`idMaterial`, `Request number`),
-  INDEX `ЗаявкаМатзаявкиFK_idx` (`Request number` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `CRMPI`.`request_material` (
+  `material_id` INT NOT NULL,
+  `request_number` INT NOT NULL,
+  PRIMARY KEY (`material_id`, `request_number`),
+  INDEX `ЗаявкаМатзаявкиFK_idx` (`request_number` ASC) VISIBLE,
   CONSTRAINT `AmounrodmaterialRequestmaterialFK`
-    FOREIGN KEY (`idMaterial`)
-    REFERENCES `CRMPI`.`Amount of material` (`idMaterial`)
+    FOREIGN KEY (`material_id`)
+    REFERENCES `CRMPI`.`amount_of_material` (`material_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `RequestRequestmaterialFK`
-    FOREIGN KEY (`Request number`)
-    REFERENCES `CRMPI`.`Request` (`Request number`)
+    FOREIGN KEY (`request_number`)
+    REFERENCES `CRMPI`.`request` (`request_number`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CRMPI`.`Store material`
+-- Table `CRMPI`.`store_material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CRMPI`.`Store material` (
-  `idMaterial` INT NOT NULL,
-  `Amount` INT NOT NULL,
-  PRIMARY KEY (`idMaterial`),
+CREATE TABLE IF NOT EXISTS `CRMPI`.`store_material` (
+  `material_id` INT NOT NULL,
+  `amount` INT NOT NULL,
+  PRIMARY KEY (`material_id`),
   CONSTRAINT `InfoaboutmaterialStorematerialFK`
-    FOREIGN KEY (`idMaterial`)
-    REFERENCES `CRMPI`.`Infomation about materials` (`idMaterial`)
+    FOREIGN KEY (`material_id`)
+    REFERENCES `CRMPI`.`information_about_material` (`material_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CRMPI`.`provider_deliver`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CRMPI`.`provider_deliver` (
+  `provider_id` INT NOT NULL,
+  `contract_number` INT NOT NULL,
+  PRIMARY KEY (`provider_id`, `contract_number`),
+  INDEX `DeliveryProviderdeliverFK_idx` (`contract_number` ASC) VISIBLE,
+  CONSTRAINT `ProviderProviderdeliverFK`
+    FOREIGN KEY (`provider_id`)
+    REFERENCES `CRMPI`.`provider` (`provider_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `DeliveryProviderdeliverFK`
+    FOREIGN KEY (`contract_number`)
+    REFERENCES `CRMPI`.`delivery` (`contract_number`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 

@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS `CRMPI`.`order` (
   `model_id` INT NOT NULL,
   `short_description` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`order_number`),
-  INDEX `idМодели_idx` (`model_id` ASC) VISIBLE,
-  INDEX `idКлиента_idx` (`client_id` ASC) VISIBLE,
+  INDEX `idmodel_idx` (`model_id` ASC) VISIBLE,
+  INDEX `idclient_idx` (`client_id` ASC) VISIBLE,
   CONSTRAINT `ModelOrderFK`
     FOREIGN KEY (`model_id`)
     REFERENCES `CRMPI`.`3d_model` (`model_id`)
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `CRMPI`.`order_material` (
   `order_number` INT NOT NULL,
   `material_id` INT NOT NULL,
   PRIMARY KEY (`order_number`, `material_id`),
-  INDEX `МатериалМатериалзаказаFK_idx` (`material_id` ASC) VISIBLE,
+  INDEX `material_materialorderFK_idx` (`material_id` ASC) VISIBLE,
   CONSTRAINT `OrderOrdermaterialFK`
     FOREIGN KEY (`order_number`)
     REFERENCES `CRMPI`.`order` (`order_number`)
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `CRMPI`.`request_employee` (
   `employee_id` INT NOT NULL,
   `request_number` INT NOT NULL,
   PRIMARY KEY (`employee_id`, `request_number`),
-  INDEX `ЗаявкаСотрзаявкиFK_idx` (`request_number` ASC) VISIBLE,
+  INDEX `request_employeerequestFK_idx` (`request_number` ASC) VISIBLE,
   CONSTRAINT `EmployeeRequestemployeeFK`
     FOREIGN KEY (`employee_id`)
     REFERENCES `CRMPI`.`employee` (`employee_id`)
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `CRMPI`.`order_employee` (
   `order_number` INT NOT NULL,
   `employee_id` INT NOT NULL,
   PRIMARY KEY (`order_number`, `employee_id`),
-  INDEX `СотрудникиСотрузаказаFK_idx` (`employee_id` ASC) VISIBLE,
+  INDEX `employee_orderemployeeFK_idx` (`employee_id` ASC) VISIBLE,
   CONSTRAINT `EmployeeOrderemployeeFK`
     FOREIGN KEY (`employee_id`)
     REFERENCES `CRMPI`.`employee` (`employee_id`)
@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `CRMPI`.`request_material` (
   `material_id` INT NOT NULL,
   `request_number` INT NOT NULL,
   PRIMARY KEY (`material_id`, `request_number`),
-  INDEX `ЗаявкаМатзаявкиFK_idx` (`request_number` ASC) VISIBLE,
+  INDEX `request_materialrequestFK_idx` (`request_number` ASC) VISIBLE,
   CONSTRAINT `AmounrodmaterialRequestmaterialFK`
     FOREIGN KEY (`material_id`)
     REFERENCES `CRMPI`.`amount_of_material` (`material_id`)
@@ -302,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `CRMPI`.`provider_deliver` (
   `provider_id` INT NOT NULL,
   `contract_number` INT NOT NULL,
   PRIMARY KEY (`provider_id`, `contract_number`),
-  INDEX `DeliveryProviderdeliverFK_idx` (`contract_number` ASC) VISIBLE,
+  INDEX `deliveryprovider_deliverFK_idx` (`contract_number` ASC) VISIBLE,
   CONSTRAINT `ProviderProviderdeliverFK`
     FOREIGN KEY (`provider_id`)
     REFERENCES `CRMPI`.`provider` (`provider_id`)

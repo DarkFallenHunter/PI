@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_order_info(object):
+class UiOrderInfo(object):
     def setupUi(self, order_info):
         order_info.setObjectName("order_info")
         order_info.resize(401, 290)
@@ -103,17 +103,17 @@ class Ui_order_info(object):
 "border-radius: 6px;\n"
 "")
         self.cancel_button.setObjectName("cancel_button")
-        self.label_4 = QtWidgets.QLabel(order_info)
-        self.label_4.setGeometry(QtCore.QRect(0, 20, 401, 21))
+        self.order_info_label = QtWidgets.QLabel(order_info)
+        self.order_info_label.setGeometry(QtCore.QRect(0, 20, 401, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(16)
         font.setBold(True)
         font.setWeight(75)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
+        self.order_info_label.setFont(font)
+        self.order_info_label.setStyleSheet("color: rgb(255, 255, 255);")
+        self.order_info_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.order_info_label.setObjectName("order_info_label")
 
         self.retranslateUi(order_info)
         QtCore.QMetaObject.connectSlotsByName(order_info)
@@ -122,7 +122,7 @@ class Ui_order_info(object):
         _translate = QtCore.QCoreApplication.translate
         order_info.setWindowTitle(_translate("order_info", "Form"))
         item = self.order_info_table.verticalHeaderItem(0)
-        item.setText(_translate("order_info", "Новая строка"))
+        item.setText(_translate("order_info", "Номер заказа"))
         item = self.order_info_table.verticalHeaderItem(1)
         item.setText(_translate("order_info", "Фамилия"))
         item = self.order_info_table.verticalHeaderItem(2)
@@ -135,14 +135,14 @@ class Ui_order_info(object):
         self.order_info_table.setSortingEnabled(False)
         self.order_info_table.setSortingEnabled(__sortingEnabled)
         self.cancel_button.setText(_translate("order_info", "Закрыть"))
-        self.label_4.setText(_translate("order_info", "Информация о заказе №"))
+        self.order_info_label.setText(_translate("order_info", "Информация о заказе"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     order_info = QtWidgets.QWidget()
-    ui = Ui_order_info()
+    ui = UiOrderInfo()
     ui.setupUi(order_info)
     order_info.show()
     sys.exit(app.exec_())

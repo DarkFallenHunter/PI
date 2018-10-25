@@ -3,7 +3,7 @@ import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 
 
-engine = alc.create_engine("mysql+pymysql://user:pass@localhost/crmpi", echo=False)
+engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
 Session = alc.orm.sessionmaker(engine)
 session = Session()
 Base = alc.ext.declarative.declarative_base()
@@ -129,7 +129,7 @@ class Employee(Base):
 
 class ExtraInformation(Base):
     __tablename__ = "extra_information"
-    order_number = alc.Column(alc.Integer, primary_key=True)
+    order_number = alc.Column(alc.Integer, alc.ForeignKey('order.order_number'), primary_key=True)
     info = alc.Column(alc.String)
 
     def __init__(self, order_number, info):
@@ -190,16 +190,18 @@ class Order(Base):
     order_number = alc.Column(alc.Integer, primary_key=True)
     price = alc.Column(alc.DECIMAL)
     client_id = alc.Column(alc.Integer, alc.ForeignKey('client.client_id'))
-    model_id = alc.Column(alc.Integer, alc.ForeignKey('model.model_id'))
+    model_id = alc.Column(alc.Integer, alc.ForeignKey('3d_model.model_id'))
     short_description = alc.Column(alc.String)
+    date = alc.Column(alc.Date)
 
-    def __init__(self, status, order_number, price, client_id, model_id, short_description):
+    def __init__(self, status, order_number, price, client_id, model_id, short_description, date):
         self.status = status
         self.order_number = order_number
         self.price = price
         self.client_id = client_id
         self.model_id = model_id
         self.short_description = short_description
+        self.date = date
 
     def __repr__(self):
         res_str = str()
@@ -367,4 +369,37 @@ Base.metadata.create_all(engine)
 
 def search_employee(login, passwd):
     for record in session.query(Access, Employee).filter_by(login=login, password=passwd).join(Employee):
-        print(record.Employee.status)
+        return record.Employee.status
+
+
+def get_orders_info():
+    orders = []
+    for record in session.query(Order):
+        orders.append([record.order_number, record.date, record.short_description, record.status])
+    return orders
+
+
+def get_more_order_info(order_number):
+    for record in session.query(Order, Client, OrderMaterial, Material).filter_by(order_number=order_number).\
+            join(Client).join(OrderMaterial).join(Material):
+        return [record.Order.order_number, record.Client.surname, record.Client.name,
+                record.Client.patronymic, record.Material.type + ' ' + record.Material.color]
+
+
+def get_needed_modification_orders():
+    orders = []
+    for record in session.query(OrderModification):
+        orders.append(record.order_number)
+    return orders
+
+
+def get_needed_modification_order_info(order_number):
+    for record in session.query(OrderModification, Order, Client, Model3D, OrderMaterial, Material, ExtraInformation).\
+            filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).join(ExtraInformation).\
+            join(OrderMaterial).join(Material):
+        return [record.OrderModification.mark, record.Client.surname, record.Client.name, record.Client.patronymic,
+                record.Client.telephone_number, record.Model3D.model_file, record.Material.type, record.Material.color,
+                record.ExtraInformation.info, record.Order.short_description, record.Order.price]
+
+
+print(get_needed_modification_order_info(1))

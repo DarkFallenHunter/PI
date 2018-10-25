@@ -61,6 +61,7 @@ class UiAuthorizationWindow(object):
         self.password_text.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.password_text.setText("")
         self.password_text.setObjectName("password_text")
+        self.password_text.setEchoMode(QtWidgets.QLineEdit.Password)
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(50, 40, 381, 31))
         font = QtGui.QFont()

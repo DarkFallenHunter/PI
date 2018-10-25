@@ -7,8 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from interface.orderinfowindow import OrderInfoWindow
-from functools import partial
 
 class UiMainWindow(object):
     def setupUi(self, main_window):
@@ -844,8 +842,6 @@ class UiMainWindow(object):
         self.refactor_order_button.clicked.connect(self.showRefactore)
         self.show_orders_info_button.clicked.connect(self.showOrdersInfo)
 
-        self.order_info_window = OrderInfoWindow()
-
         self.retranslateUi(main_window)
         QtCore.QMetaObject.connectSlotsByName(main_window)
 
@@ -943,7 +939,6 @@ class UiMainWindow(object):
         main_window.resize(741, 678)
         main_window.setMinimumWidth(741)
         main_window.setMaximumWidth(741)
-
 
 
 if __name__ == "__main__":

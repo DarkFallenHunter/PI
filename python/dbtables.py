@@ -3,7 +3,7 @@ import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 
 
-engine = alc.create_engine("mysql+pymysql://user:pass@localhost/crmpi", echo=False, encoding='uft8')
+engine = alc.create_engine("mysql+pymysql://user:pass@localhost/crmpi", echo=False)
 Session = alc.orm.sessionmaker(engine)
 session = Session()
 Base = alc.ext.declarative.declarative_base()
@@ -28,7 +28,7 @@ class Model3D(Base):
 
 class Access(Base):
     __tablename__ = "access"
-    employee_id = alc.Column(alc.Integer, primary_key=True)
+    employee_id = alc.Column(alc.Integer, alc.ForeignKey('employee.employee_id'), primary_key=True)
     login = alc.Column(alc.String)
     password = alc.Column(alc.String)
 
@@ -363,3 +363,8 @@ class StoreMaterial(Base):
 
 
 Base.metadata.create_all(engine)
+
+
+def search_employee(login, passwd):
+    for record in session.query(Access, Employee).filter_by(login=login, password=passwd).join(Employee):
+        print(record.Employee.status)

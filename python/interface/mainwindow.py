@@ -2,8 +2,9 @@ import sys
 import model.dbtables as db
 from interface.windows_style.authorizationstyle import UiAuthorizationWindow
 from interface.windows_style.managerwindow import UiManagerWindow
-from interface.windows_style.moreorderinfo import UiMoreOrderInfo
+from interface.windows_style.moreorderinfo import UiMoreOrderInfoManager
 from interface.windows_style.workerwindow import UiWorkerWindow
+from interface.windows_style.infowindow import UiMoreOrderInfoWorker
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 
@@ -46,12 +47,12 @@ class MainWindow(QtWidgets.QMainWindow):
         employee_info = db.search_employee(self.ui.login_text.text(), self.ui.password_text.text())
         if employee_info is None:
             self.error.show()
-        elif employee_info[0] == 'Менеджер':
+        elif employee_info[0] == 1:
             self.ui = ManagerMainWindow(employee_info[1])
             self.ui.setupUi(self)
             self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
             self.ui.reinit()
-        elif employee_info[0] == 'Работник':
+        elif employee_info[0] == 2:
             self.ui = WorkerMainWindow(employee_info[1])
             self.ui.setupUi(self)
             self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
@@ -63,16 +64,16 @@ class MainWindow(QtWidgets.QMainWindow):
 class ManagerMainWindow(UiManagerWindow):
     def __init__(self, manager_id):
         super().__init__()
-        self.order_info = OrderInfoWindow()
-        self.manager_id = manager_id
+        self.order_info = OrderInfoManagerWindow()
         self.refactor_filename = ''
         self.create_filename = ''
+        self.db_connection = db.ManagerConnection(manager_id)
 
     def reinit(self):
         self.fill_table()
-        self.fill_combobox(self.type_of_plastic_combobox, db.get_plastic_types())
-        self.fill_combobox(self.need_refactoring_order_combobox, db.get_needed_modification_orders(self.manager_id))
-        self.fill_combobox(self.type_of_plastic_combobox_ref, db.get_plastic_types())
+        self.fill_combobox(self.type_of_plastic_combobox, self.db_connection.get_plastic_types())
+        self.fill_combobox(self.need_refactoring_order_combobox, self.db_connection.get_needed_modification_orders())
+        self.fill_combobox(self.type_of_plastic_combobox_ref, self.db_connection.get_plastic_types())
         self.type_of_plastic_combobox.setCurrentIndex(-1)
         self.need_refactoring_order_combobox.setCurrentIndex(-1)
         self.type_of_plastic_combobox_ref.setCurrentIndex(-1)
@@ -87,6 +88,7 @@ class ManagerMainWindow(UiManagerWindow):
         self.select_file_button_ref.clicked.connect(lambda: self.select_file(True))
         self.add_order_button.clicked.connect(self.add_new_order)
         self.refactor_order_button_ref.clicked.connect(self.update_order)
+        self.entering_number()
 
     def select_file(self, ref):
         if not ref:
@@ -118,14 +120,14 @@ class ManagerMainWindow(UiManagerWindow):
     def set_colors_for_current_plastic(self, ref):
         if ref:
             self.fill_combobox(self.color_of_plastic_combobox_ref,
-                               db.get_colors_of_plastic(self.type_of_plastic_combobox_ref.currentText()))
+                               self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox_ref.currentText()))
         else:
             self.fill_combobox(self.color_of_plastic_combobox,
-                               db.get_colors_of_plastic(self.type_of_plastic_combobox.currentText()))
+                               self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox.currentText()))
 
     def fill_refactor_order_info(self):
         if self.need_refactoring_order_combobox.currentText() != '':
-            order_info = db.get_needed_modification_order_info(int(self.need_refactoring_order_combobox.currentText()))
+            order_info = self.db_connection.get_needed_modification_order_info(int(self.need_refactoring_order_combobox.currentText()))
             self.note_of_refactoring_text.setText(order_info[0])
             self.surname_text_ref.setText(order_info[1])
             self.name_text_ref.setText(order_info[2])
@@ -142,7 +144,7 @@ class ManagerMainWindow(UiManagerWindow):
             self.finale_price_label_ref.setText(str(order_info[11]) + ' рублей')
 
     def fill_table(self):
-        orders = db.get_orders_info(self.manager_id)
+        orders = self.db_connection.get_orders_info()
         for order in orders:
             row_num = self.orders_info_table.rowCount()
             self.orders_info_table.insertRow(row_num)
@@ -158,7 +160,7 @@ class ManagerMainWindow(UiManagerWindow):
 
             order_number = self.orders_info_table.currentItem().text()
 
-            for item in enumerate(db.get_more_order_info(order_number)):
+            for item in enumerate(self.db_connection.get_more_order_info(order_number)):
                 table_item = QtWidgets.QTableWidgetItem(str(item[1]))
                 table_item.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.order_info.ui.order_info_table.setItem(item[0], 0, table_item)
@@ -166,11 +168,13 @@ class ManagerMainWindow(UiManagerWindow):
             self.order_info.show()
 
     def add_new_order(self):
-        db.add_new_order([self.surname_text.text(), self.name_text.text(), self.patronymic_text.text(),
-                          self.phone_text.text(), self.email_text.text(), self.create_filename,
-                          self.type_of_plastic_combobox.currentText(), self.color_of_plastic_combobox.currentText(),
-                          self.additional_info_text.toPlainText(), self.short_description_text.toPlainText(),
-                          self.finale_price_label.text().split()[0]])
+        self.db_connection.add_new_order([self.surname_text.text(), self.name_text.text(), self.patronymic_text.text(),
+                                          self.phone_text.text(), self.email_text.text(), self.create_filename,
+                                          self.type_of_plastic_combobox.currentText(),
+                                          self.color_of_plastic_combobox.currentText(),
+                                          self.additional_info_text.toPlainText(),
+                                          self.short_description_text.toPlainText(),
+                                          self.finale_price_label.text().split()[0]])
 
         self.surname_text.clear()
         self.name_text.clear()
@@ -186,14 +190,15 @@ class ManagerMainWindow(UiManagerWindow):
         self.finale_price_label.setText('0 рублей')
 
     def update_order(self):
-        db.update_order_info([self.need_refactoring_order_combobox.currentText(), self.surname_text_ref.text(),
-                              self.name_text_ref.text(), self.patronymic_text_ref.text(), self.phone_text_ref.text(),
-                              self.email_text_ref.text(), self.refactor_filename,
-                              self.type_of_plastic_combobox_ref.currentText(),
-                              self.color_of_plastic_combobox_ref.currentText(),
-                              self.additional_info_text_ref.toPlainText(),
-                              self.short_description_text_ref.toPlainText(),
-                              self.finale_price_label_ref.text().split()[0]])
+        self.db_connection.update_order_info([self.need_refactoring_order_combobox.currentText(),
+                                              self.surname_text_ref.text(), self.name_text_ref.text(),
+                                              self.patronymic_text_ref.text(), self.phone_text_ref.text(),
+                                              self.email_text_ref.text(), self.refactor_filename,
+                                              self.type_of_plastic_combobox_ref.currentText(),
+                                              self.color_of_plastic_combobox_ref.currentText(),
+                                              self.additional_info_text_ref.toPlainText(),
+                                              self.short_description_text_ref.toPlainText(),
+                                              self.finale_price_label_ref.text().split()[0]])
 
         self.need_refactoring_order_combobox.removeItem(self.need_refactoring_order_combobox.currentIndex())
         self.note_of_refactoring_text.clear()
@@ -211,11 +216,19 @@ class ManagerMainWindow(UiManagerWindow):
         self.short_description_text_ref.clear()
         self.finale_price_label_ref.setText('0 рублей')
 
+    def entering_number(self):
+        try:
+            phone_numbers = self.db_connection.get_phones()
+            completer = QtWidgets.QCompleter(phone_numbers, self.phone_text)
+            self.phone_text.setCompleter(completer)
+        except Exception as e:
+            print(e)
 
-class OrderInfoWindow(QtWidgets.QWidget):
+
+class OrderInfoManagerWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self.ui = UiMoreOrderInfo()
+        self.ui = UiMoreOrderInfoManager()
         self.ui.setupUi(self)
         self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
         self.ui.close_button.clicked.connect(self.hide)
@@ -225,9 +238,45 @@ class WorkerMainWindow(UiWorkerWindow):
     def __init__(self, worker_id):
         super().__init__()
         self.worker_id = worker_id
+        self.order_info = OrderInfoWorkerWindow()
+        self.db_connection = db.WorkerConnection(self.worker_id)
 
     def reinit(self):
-        print(self.worker_id)
+        self.fill_table()
+        self.more_info_order_button.clicked.connect(self.show_more_info)
+
+    def fill_table(self):
+        orders = self.db_connection.get_orders_info()
+        for order in orders:
+            row_index = self.orders_info_table.rowCount()
+            self.orders_info_table.insertRow(row_index)
+            for column_index, item in enumerate(order):
+                table_item = QtWidgets.QTableWidgetItem(str(item))
+                table_item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)
+                table_item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.orders_info_table.setItem(row_index, column_index, table_item)
+
+    def show_more_info(self):
+        if self.orders_info_table.currentItem() is not None:
+            if self.orders_info_table.currentColumn() != 0:
+                self.orders_info_table.setCurrentCell(self.orders_info_table.currentRow(), 0)
+
+            order_number = self.orders_info_table.currentItem().text()
+            for index, item in enumerate(self.db_connection.get_more_order_info(order_number)):
+                table_item = QtWidgets.QTableWidgetItem(str(item))
+                table_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                self.order_info.ui.order_info_table.setItem(index, 0, table_item)
+
+            self.order_info.show()
+
+
+class OrderInfoWorkerWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.ui = UiMoreOrderInfoWorker()
+        self.ui.setupUi(self)
+        self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
+        self.ui.close_button.clicked.connect(self.hide)
 
 
 if __name__ == "__main__":

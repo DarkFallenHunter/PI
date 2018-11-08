@@ -4,9 +4,6 @@ import sqlalchemy.ext.declarative
 from datetime import date
 
 
-engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
-Session = alc.orm.sessionmaker(engine)
-session = Session()
 Base = alc.ext.declarative.declarative_base()
 
 
@@ -111,7 +108,7 @@ class Employee(Base):
     surname = alc.Column(alc.String)
     name = alc.Column(alc.String)
     patronymic = alc.Column(alc.String)
-    status = alc.Column(alc.String)
+    status = alc.Column(alc.Integer, alc.ForeignKey('occupation.occupation_id'))
 
     def __init__(self, employee_id, surname, name, patronymic, status):
         self.employee_id = employee_id
@@ -185,17 +182,35 @@ class Material(Base):
         return 'Material(' + res_str + ')'
 
 
+class Occupation(Base):
+    __tablename__ = 'occupation'
+    occupation_id = alc.Column(alc.Integer, primary_key=True)
+    occupation_name = alc.Column(alc.String)
+
+    def __init__(self, occupation_id, occupation_name):
+        self.occupation_id = occupation_id
+        self.occupation_name = occupation_name
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'Occupation(' + res_str + ')'
+
+
 class Order(Base):
     __tablename__ = "order"
-    status = alc.Column(alc.String)
+    status = alc.Column(alc.Integer, alc.ForeignKey('statuses.status_id'))
     order_number = alc.Column(alc.Integer, primary_key=True)
     price = alc.Column(alc.DECIMAL)
     client_id = alc.Column(alc.Integer, alc.ForeignKey('client.client_id'))
     model_id = alc.Column(alc.Integer, alc.ForeignKey('3d_model.model_id'))
     short_description = alc.Column(alc.String)
     date = alc.Column(alc.Date)
+    end_date = alc.Column(alc.Date)
 
-    def __init__(self, order_number, price, client_id, model_id, short_description, date, status):
+    def __init__(self, order_number, price, client_id, model_id, short_description, date, end_date, status):
         self.status = status
         self.order_number = order_number
         self.price = price
@@ -203,6 +218,7 @@ class Order(Base):
         self.model_id = model_id
         self.short_description = short_description
         self.date = date
+        self.end_date = end_date
 
     def __repr__(self):
         res_str = str()
@@ -299,12 +315,35 @@ class ProviderDeliver(Base):
         return 'ProviderDeliver(' + res_str + ')'
 
 
+class RejectedOrder(Base):
+    __tablename__ = 'rejected_orders'
+    order_number = alc.Column(alc.Integer, alc.ForeignKey('order.order_number'), primary_key=True)
+    employee_id = alc.Column(alc.Integer, primary_key=True)
+
+    def __init__(self, order_number, employee_id):
+        self.order_number = order_number
+        self.employee_id = employee_id
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'RejectOrder(' + res_str + ')'
+
+
 class Request(Base):
     __tablename__ = "request"
     request_number = alc.Column(alc.Integer, primary_key=True)
+    start_date = alc.Column(alc.Date)
+    end_date = alc.Column(alc.Date)
+    order_number = alc.Column(alc.Integer)
 
-    def __init__(self, request_number):
+    def __init__(self, request_number, start_date, end_date, order_number):
         self.request_number = request_number
+        self.start_date = start_date
+        self.end_date = end_date
+        self.order_number = order_number
 
     def __repr__(self):
         res_str = str()
@@ -348,6 +387,23 @@ class RequestMaterial(Base):
         return 'RequestMaterial(' + res_str + ')'
 
 
+class Statuses(Base):
+    __tablename__ = "statuses"
+    status_id = alc.Column(alc.Integer, primary_key=True)
+    status_name = alc.Column(alc.String)
+
+    def __init__(self, status_id, status_name):
+        self.status_id = status_id
+        self.status_name = status_name
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'Status(' + res_str + ')'
+
+
 class StoreMaterial(Base):
     __tablename__ = "store_material"
     material_id = alc.Column(alc.Integer, alc.ForeignKey('information_about_material.material_id'), primary_key=True)
@@ -365,114 +421,176 @@ class StoreMaterial(Base):
         return 'StoreMaterial(' + res_str + ')'
 
 
-Base.metadata.create_all(engine)
-
-
 def search_employee(login, passwd):
+    engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+    Session = alc.orm.sessionmaker(engine)
+    session = Session()
+    Base.metadata.create_all(engine)
     for record in session.query(Access, Employee).filter_by(login=login, password=passwd).join(Employee):
         return [record.Employee.status, record.Employee.employee_id]
 
 
-def get_orders_info(employee_id):
-    orders = []
-    for record in session.query(Order, OrderEmployee).join(OrderEmployee).filter_by(employee_id=employee_id):
-        orders.append([record.Order.order_number, record.Order.date, record.Order.short_description, record.Order.status])
-    return orders
+class ManagerConnection:
+    def __init__(self, manager_id):
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.Session = alc.orm.sessionmaker(self.engine)
+        self.session = self.Session()
+        self.manager_id = manager_id
+
+    def get_orders_info(self):
+        orders = []
+        for record in self.session.query(Order, Statuses).join(Statuses).\
+                join(OrderEmployee).filter_by(employee_id=self.manager_id):
+            orders.append([record.Order.order_number, record.Order.date,
+                           record.Order.short_description, record.Statuses.status_name])
+        return orders
+
+    def get_more_order_info(self, order_number):
+        for record in self.session.query(Order, Client, OrderMaterial, Material).filter_by(order_number=order_number).\
+                join(Client).join(OrderMaterial).join(Material):
+            return [record.Order.order_number, record.Client.surname, record.Client.name, record.Client.patronymic,
+                    record.Client.telephone_number, record.Client.email, record.Material.type + ' '
+                    + record.Material.color]
+
+    def get_needed_modification_orders(self):
+        orders = []
+        for record in self.session.query(OrderModification, Order, OrderEmployee).join(Order).join(OrderEmployee).\
+                filter_by(employee_id=self.manager_id):
+            orders.append(str(record.OrderModification.order_number))
+        return orders
+
+    def get_needed_modification_order_info(self, order_number):
+        for record in self.session.query(OrderModification, Order, Client, Model3D,
+                                         OrderMaterial, Material, ExtraInformation).\
+                filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).join(ExtraInformation).\
+                join(OrderMaterial).join(Material):
+            return [record.OrderModification.mark, record.Client.surname, record.Client.name, record.Client.patronymic,
+                    record.Client.telephone_number, record.Client.email, record.Model3D.model_file,
+                    record.Material.type, record.Material.color, record.ExtraInformation.info,
+                    record.Order.short_description, record.Order.price]
+
+    def get_plastic_types(self):
+        types = []
+        for record in self.session.query(InformationAboutMaterial).distinct(InformationAboutMaterial.type).\
+                group_by(InformationAboutMaterial.type):
+            types.append(record.type)
+        return types
+
+    def get_colors_of_plastic(self, plastic_type):
+        colors = []
+        for record in self.session.query(InformationAboutMaterial).filter_by(type=plastic_type):
+            colors.append(record.color)
+        return colors
+
+    def add_new_order(self, values):
+        clients = self.session.query(Client.client_id, Client.telephone_number).all()
+        client_id = clients[-1].client_id + 1
+        for client in clients:
+            if client.telephone_number == values[3]:
+                client_id = client.client_id
+
+        if client_id == clients[-1].client_id + 1:
+            self.session.add(Client(client_id, values[0], values[1], values[2], values[3], values[4]))
+
+        models = self.session.query(Model3D).all()
+        model_id = models[-1].model_id + 1
+        for model in models:
+            if model.model_file == values[5]:
+                model_id = model.model_id
+
+        if model_id == models[-1].model_id + 1:
+            self.session.add(Model3D(model_id, values[5]))
+
+        order_number = self.session.query(alc.func.max(Order.order_number)).one()[0] + 1
+        self.session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 'В обработке'))
+
+        material_id = self.session.query(alc.func.max(Material.material_id)).one()[0]
+        self.session.add(Material(material_id, values[6], values[7]))
+
+        self.session.add(OrderMaterial(order_number, material_id))
+
+        self.session.add(OrderEmployee(order_number, values[11]))
+        self.session.commit()
+
+        if values[8] != '':
+            self.session.add(ExtraInformation(order_number, values[8]))
+            self.session.commit()
+
+    def update_order_info(self, values):
+        order = self.session.query(Order).filter_by(order_number=int(values[0])).one()
+
+        self.session.query(Model3D).filter_by(model_id=order.model_id).update({Model3D.model_file: values[6]})
+        self.session.query(Order).filter_by(order_number=order.order_number).\
+            update({Order.short_description: values[10], Order.price: values[11]})
+
+        material_id = self.session.query(Material.material_id).join(OrderMaterial).\
+            filter_by(order_number=order.order_number).first()[0]
+
+        self.session.query(Material).filter_by(material_id=material_id).\
+            update({Material.type: values[7], Material.color: values[8]})
+
+        if values[9] == '' and self.session.query(ExtraInformation.info).filter_by(order_number=order.order_number).one()[0] != '':
+            self.session.delete(self.session.query(ExtraInformation).filter_by(order_number=order.order_number).one())
+        else:
+            self.session.query(ExtraInformation).filter_by(order_number=order.order_number).\
+                update({ExtraInformation.info: values[9]})
+
+        self.session.delete(self.session.query(OrderModification).filter_by(order_number=order.order_number).first())
+
+        self.session.commit()
+
+    def get_phones(self):
+        numbers = []
+        for record in self.session.query(Client):
+            numbers.append(record.telephone_number)
+        return numbers
+
+    def get_client_info_by_phone(self, phone_number):
+        for record in self.session.query(Client).filter_by(telephone_number=phone_number):
+            return [record.surname, record.name, record.patronymic, record.telephone_number, record.email]
 
 
-def get_more_order_info(order_number):
-    for record in session.query(Order, Client, OrderMaterial, Material).filter_by(order_number=order_number).\
-            join(Client).join(OrderMaterial).join(Material):
-        return [record.Order.order_number, record.Client.surname, record.Client.name, record.Client.patronymic,
-                record.Client.telephone_number, record.Client.email, record.Material.type + ' ' + record.Material.color]
+class WorkerConnection:
+    def __init__(self, worker_id):
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.Session = alc.orm.sessionmaker(self.engine)
+        self.session = self.Session()
+        self.worker_id = worker_id
+
+    def get_orders_info(self):
+        orders = []
+        for record in self.session.query(Order, Statuses).join(Statuses).\
+                join(OrderEmployee).filter_by(employee_id=self.worker_id):
+            orders.append([record.Order.order_number, 0, record.Statuses.status_name])
+        requests_dates = dict()
+        for record in self.session.query(Request):
+            requests_dates[record.order_number] = record.end_date
+        for order in orders:
+            if order[0] in requests_dates.keys():
+                order[1] = requests_dates[order[0]]
+        return orders
+
+    def get_more_order_info(self, order_number):
+        for record in self.session.query(Order, Material, Model3D, ExtraInformation).\
+                filter_by(order_number=order_number).join(ExtraInformation).join(OrderMaterial).join(Material):
+            return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
+                    record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
+
+    def get_new_orders(self):
+        new_orders = []
+        for record in self.session.query(Order, Model3D).filter_by(status=1).join(OrderEmployee).\
+                filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(OrderMaterial).join(Material):
+            new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
+                               record.Material.type + ' ' + record.Material.color])
+        return new_orders
 
 
-def get_needed_modification_orders(employee_id):
-    orders = []
-    for record in session.query(OrderModification, Order, OrderEmployee).join(Order).join(OrderEmployee).\
-            filter_by(employee_id=employee_id):
-        orders.append(str(record.OrderModification.order_number))
-    return orders
 
+engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+Session = alc.orm.sessionmaker(engine)
+session = Session()
+# print(session.query(Order).filter(Order.status.in_([1, 2, 3, 4, 5, 6])).all())
+# print(session.query(Employee, Occupation).join(Occupation).all())
 
-def get_needed_modification_order_info(order_number):
-    for record in session.query(OrderModification, Order, Client, Model3D, OrderMaterial, Material, ExtraInformation).\
-            filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).join(ExtraInformation).\
-            join(OrderMaterial).join(Material):
-        return [record.OrderModification.mark, record.Client.surname, record.Client.name, record.Client.patronymic,
-                record.Client.telephone_number, record.Client.email, record.Model3D.model_file, record.Material.type,
-                record.Material.color, record.ExtraInformation.info, record.Order.short_description, record.Order.price]
-
-
-def get_plastic_types():
-    types = []
-    for record in session.query(InformationAboutMaterial).distinct(InformationAboutMaterial.type).\
-            group_by(InformationAboutMaterial.type):
-        types.append(record.type)
-    return types
-
-
-def get_colors_of_plastic(plastic_type):
-    colors = []
-    for record in session.query(InformationAboutMaterial).filter_by(type=plastic_type):
-        colors.append(record.color)
-    return colors
-
-
-def add_new_order(values):
-    clients = session.query(Client.client_id, Client.telephone_number).all()
-    client_id = clients[-1].client_id + 1
-    for client in clients:
-        if client.telephone_number == values[3]:
-            client_id = client.client_id
-
-    if client_id == clients[-1].client_id + 1:
-        session.add(Client(client_id, values[0], values[1], values[2], values[3], values[4]))
-
-    models = session.query(Model3D).all()
-    model_id = models[-1].model_id + 1
-    for model in models:
-        if model.model_file == values[5]:
-            model_id = model.model_id
-
-    if model_id == models[-1].model_id + 1:
-        session.add(Model3D(model_id, values[5]))
-
-    order_number = session.query(alc.func.max(Order.order_number)).one()[0] + 1
-    session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 'В обработке'))
-
-    material_id = session.query(alc.func.max(Material.material_id)).one()[0]
-    session.add(Material(material_id, values[6], values[7]))
-
-    session.add(OrderMaterial(order_number, material_id))
-
-    session.add(OrderEmployee(order_number, values[11]))
-    session.commit()
-
-    if values[8] != '':
-        session.add(ExtraInformation(order_number, values[8]))
-        session.commit()
-
-
-def update_order_info(values):
-    order = session.query(Order).filter_by(order_number=int(values[0])).one()
-
-    session.query(Model3D).filter_by(model_id=order.model_id).update({Model3D.model_file: values[6]})
-    session.query(Order).filter_by(order_number=order.order_number).\
-        update({Order.short_description: values[10], Order.price: values[11]})
-
-    material_id = session.query(Material.material_id).join(OrderMaterial).\
-        filter_by(order_number=order.order_number).first()[0]
-
-    session.query(Material).filter_by(material_id=material_id).\
-        update({Material.type: values[7], Material.color: values[8]})
-
-    if values[9] == '' and session.query(ExtraInformation.info).filter_by(order_number=order.order_number).one()[0] != '':
-        session.delete(session.query(ExtraInformation).filter_by(order_number=order.order_number).one())
-    else:
-        session.query(ExtraInformation).filter_by(order_number=order.order_number).\
-            update({ExtraInformation.info: values[9]})
-
-    session.delete(session.query(OrderModification).filter_by(order_number=order.order_number).first())
-
-    session.commit()
+# worker_con = WorkerConnection(2)
+# print(worker_con.get_orders_info())

@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WorkerWindow</class>
- <widget class="QMainWindow" name="WorkerWindow">
+ <class>worker_window</class>
+ <widget class="QMainWindow" name="worker_window">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1102</width>
-    <height>661</height>
+    <width>1302</width>
+    <height>641</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1302</width>
+    <height>641</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1302</width>
+    <height>641</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -20,8 +32,8 @@
    <widget class="QLabel" name="worker_label">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>30</y>
+      <x>590</x>
+      <y>10</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -47,8 +59,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>315</x>
-      <y>70</y>
+      <x>420</x>
+      <y>50</y>
       <width>201</width>
       <height>33</height>
      </rect>
@@ -78,8 +90,8 @@ border-radius: 6px;
     </property>
     <property name="geometry">
      <rect>
-      <x>585</x>
-      <y>70</y>
+      <x>690</x>
+      <y>50</y>
       <width>201</width>
       <height>33</height>
      </rect>
@@ -107,8 +119,8 @@ border-radius: 6px;
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>110</y>
-      <width>1101</width>
+      <y>90</y>
+      <width>1301</width>
       <height>531</height>
      </rect>
     </property>
@@ -124,7 +136,7 @@ border-radius: 6px;
      </property>
      <property name="geometry">
       <rect>
-       <x>315</x>
+       <x>340</x>
        <y>460</y>
        <width>191</width>
        <height>41</height>
@@ -155,7 +167,7 @@ border-radius: 6px;
      </property>
      <property name="geometry">
       <rect>
-       <x>595</x>
+       <x>770</x>
        <y>460</y>
        <width>191</width>
        <height>41</height>
@@ -185,7 +197,7 @@ border-radius: 6px;
       <rect>
        <x>30</x>
        <y>50</y>
-       <width>1041</width>
+       <width>1241</width>
        <height>391</height>
       </rect>
      </property>
@@ -217,8 +229,11 @@ border-radius: 6px;
       <number>12</number>
      </property>
      <property name="columnCount">
-      <number>5</number>
+      <number>4</number>
      </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
      <row/>
      <row/>
      <row/>
@@ -275,17 +290,6 @@ border-radius: 6px;
        </font>
       </property>
      </column>
-     <column>
-      <property name="text">
-       <string>Статус</string>
-      </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>11</pointsize>
-       </font>
-      </property>
-     </column>
      <item row="0" column="0">
       <property name="text">
        <string/>
@@ -295,7 +299,7 @@ border-radius: 6px;
     <widget class="QLabel" name="new_orders_label">
      <property name="geometry">
       <rect>
-       <x>460</x>
+       <x>560</x>
        <y>10</y>
        <width>181</width>
        <height>31</height>
@@ -323,9 +327,9 @@ border-radius: 6px;
    <widget class="QFrame" name="orders_info_group">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>110</y>
-      <width>601</width>
+      <x>300</x>
+      <y>90</y>
+      <width>701</width>
       <height>531</height>
      </rect>
     </property>
@@ -372,7 +376,7 @@ border-radius: 6px;
      </property>
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>490</x>
        <y>460</y>
        <width>191</width>
        <height>41</height>
@@ -402,7 +406,7 @@ border-radius: 6px;
       <rect>
        <x>20</x>
        <y>50</y>
-       <width>561</width>
+       <width>661</width>
        <height>391</height>
       </rect>
      </property>
@@ -436,6 +440,12 @@ border-radius: 6px;
      <property name="columnCount">
       <number>3</number>
      </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
      <row/>
      <row/>
      <row/>
@@ -461,7 +471,7 @@ border-radius: 6px;
      </column>
      <column>
       <property name="text">
-       <string>Статус заявки</string>
+       <string>Дата поставки материалов</string>
       </property>
       <property name="font">
        <font>
@@ -490,7 +500,7 @@ border-radius: 6px;
     <widget class="QLabel" name="current_orders_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>250</x>
        <y>10</y>
        <width>201</width>
        <height>31</height>
@@ -514,13 +524,43 @@ border-radius: 6px;
       <string>ТЕКУЩИЕ ЗАКАЗЫ</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="complite_order_button">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>255</x>
+       <y>460</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(171,171,171,1));
+border-color: rgb(102, 102, 102);
+border: 2px solid rgb(102, 102, 102);
+border-radius: 6px;
+</string>
+     </property>
+     <property name="text">
+      <string>Завершить заказ</string>
+     </property>
+    </widget>
    </widget>
-   <zorder>new_orders_group</zorder>
+   <zorder>orders_info_group</zorder>
    <zorder>worker_label</zorder>
    <zorder>current_orders_button</zorder>
    <zorder>new_orders_button</zorder>
-   <zorder>orders_info_group</zorder>
-   <zorder>new_orders_label</zorder>
+   <zorder>new_orders_group</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

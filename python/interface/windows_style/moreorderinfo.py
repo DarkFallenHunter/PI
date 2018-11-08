@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class UiMoreOrderInfo(object):
+class UiMoreOrderInfoManager(object):
     def setupUi(self, more_order_info):
         more_order_info.setObjectName("more_order_info")
         more_order_info.resize(401, 346)
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     more_order_info = QtWidgets.QWidget()
-    ui = UiMoreOrderInfo()
+    ui = UiMoreOrderInfoManager()
     ui.setupUi(more_order_info)
     more_order_info.show()
     sys.exit(app.exec_())

@@ -421,6 +421,7 @@ class StoreMaterial(Base):
         return 'StoreMaterial(' + res_str + ')'
 
 
+# Поиск работника по его логину и паролю
 def search_employee(login, passwd):
     engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
     Session = alc.orm.sessionmaker(engine)
@@ -430,167 +431,310 @@ def search_employee(login, passwd):
         return [record.Employee.status, record.Employee.employee_id]
 
 
+# Класс для взаимодействия с бд для менеджера
 class ManagerConnection:
     def __init__(self, manager_id):
         self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
-        self.session = self.Session()
+        Base.metadata.create_all(self.engine)
         self.manager_id = manager_id
 
+    # Получение информации обо всех заказах менеджера
     def get_orders_info(self):
-        orders = []
-        for record in self.session.query(Order, Statuses).join(Statuses).\
-                join(OrderEmployee).filter_by(employee_id=self.manager_id):
-            orders.append([record.Order.order_number, record.Order.date,
-                           record.Order.short_description, record.Statuses.status_name])
-        return orders
+        session = self.Session()
+        try:
+            orders = []
+            for record in session.query(Order, Statuses).join(Statuses).\
+                    join(OrderEmployee).filter_by(employee_id=self.manager_id):
+                orders.append([record.Order.order_number, record.Order.date,
+                               record.Order.short_description, record.Statuses.status_name])
+            return orders
+        finally:
+            session.close()
 
+    # Получение расширенной информации о заказе
     def get_more_order_info(self, order_number):
-        for record in self.session.query(Order, Client, OrderMaterial, Material).filter_by(order_number=order_number).\
-                join(Client).join(OrderMaterial).join(Material):
-            return [record.Order.order_number, record.Client.surname, record.Client.name, record.Client.patronymic,
-                    record.Client.telephone_number, record.Client.email, record.Material.type + ' '
-                    + record.Material.color]
+        session = self.Session()
+        try:
+            for record in session.query(Order, Client, OrderMaterial, Material, Model3D).\
+                    filter_by(order_number=order_number).join(Client).join(OrderMaterial).join(Material).join(Model3D):
+                return [record.Order.order_number, record.Client.surname, record.Client.name, record.Client.patronymic,
+                        record.Client.telephone_number, record.Client.email, record.Material.type + ' '
+                        + record.Material.color, record.Model3D.model_file]
+        finally:
+            session.close()
 
+    # Получение заказов, требующих доработки
     def get_needed_modification_orders(self):
-        orders = []
-        for record in self.session.query(OrderModification, Order, OrderEmployee).join(Order).join(OrderEmployee).\
-                filter_by(employee_id=self.manager_id):
-            orders.append(str(record.OrderModification.order_number))
-        return orders
+        session = self.Session()
+        try:
+            orders = []
+            for record in session.query(OrderModification, Order, OrderEmployee).join(Order).join(OrderEmployee).\
+                    filter_by(employee_id=self.manager_id):
+                orders.append(str(record.OrderModification.order_number))
+            return orders
+        finally:
+            session.close()
 
+    # Получение онформации о заказе, требующем доработки
     def get_needed_modification_order_info(self, order_number):
-        for record in self.session.query(OrderModification, Order, Client, Model3D,
-                                         OrderMaterial, Material, ExtraInformation).\
-                filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).join(ExtraInformation).\
-                join(OrderMaterial).join(Material):
-            return [record.OrderModification.mark, record.Client.surname, record.Client.name, record.Client.patronymic,
-                    record.Client.telephone_number, record.Client.email, record.Model3D.model_file,
-                    record.Material.type, record.Material.color, record.ExtraInformation.info,
-                    record.Order.short_description, record.Order.price]
+        session = self.Session()
+        try:
+            for record in session.query(OrderModification, Order, Client, Model3D,
+                                        OrderMaterial, Material, ExtraInformation).\
+                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).join(ExtraInformation).\
+                    join(OrderMaterial).join(Material):
+                return [record.OrderModification.mark, record.Client.surname, record.Client.name,
+                        record.Client.patronymic, record.Client.telephone_number, record.Client.email,
+                        record.Model3D.model_file, record.Material.type, record.Material.color,
+                        record.ExtraInformation.info, record.Order.short_description, record.Order.price]
+        finally:
+            session.close()
 
+    # Получение всех типов пластика
     def get_plastic_types(self):
-        types = []
-        for record in self.session.query(InformationAboutMaterial).distinct(InformationAboutMaterial.type).\
-                group_by(InformationAboutMaterial.type):
-            types.append(record.type)
-        return types
+        session = self.Session()
+        try:
+            types = []
+            for record in session.query(InformationAboutMaterial).distinct(InformationAboutMaterial.type).\
+                    group_by(InformationAboutMaterial.type):
+                types.append(record.type)
+            return types
+        finally:
+            session.close()
 
+    # Получение всех цветов для выбранного типа пластика
     def get_colors_of_plastic(self, plastic_type):
-        colors = []
-        for record in self.session.query(InformationAboutMaterial).filter_by(type=plastic_type):
-            colors.append(record.color)
-        return colors
+        session = self.Session()
+        try:
+            colors = []
+            for record in session.query(InformationAboutMaterial).filter_by(type=plastic_type):
+                colors.append(record.color)
+            return colors
+        finally:
+            session.close()
 
+    # Назначение заказа работнику
+    def send_order_to_worker(self, order_number):
+        session = self.Session()
+        try:
+            # Получение количества заказов для каждого из рабоников
+            workers_orders = session.query(
+                OrderEmployee.employee_id,
+                alc.func.count(OrderEmployee.order_number).label('order_count')).\
+                join(Employee).filter(Employee.status == 2).group_by(OrderEmployee.employee_id).all()
+
+            # Поиск работника с наименьшим количеством заказов
+            optimal_worker = workers_orders[0]
+            for i in range(1, len(workers_orders)):
+                if optimal_worker[1] > workers_orders[i][1]:
+                    optimal_worker = workers_orders[i]
+
+            session.add(OrderEmployee(order_number, optimal_worker[0]))
+        finally:
+            session.close()
+
+    # Добавление нового заказа в базу данных
     def add_new_order(self, values):
-        clients = self.session.query(Client.client_id, Client.telephone_number).all()
-        client_id = clients[-1].client_id + 1
-        for client in clients:
-            if client.telephone_number == values[3]:
-                client_id = client.client_id
+        session = self.Session()
+        try:
+            # Поиск клиента в бд по телефону
+            clients = session.query(Client.client_id, Client.telephone_number).all()
+            client_id = clients[-1].client_id + 1
+            for client in clients:
+                if client.telephone_number == values[3]:
+                    client_id = client.client_id
 
-        if client_id == clients[-1].client_id + 1:
-            self.session.add(Client(client_id, values[0], values[1], values[2], values[3], values[4]))
+            # Если клиент не был найден, добавляется новый клиент
+            if client_id == clients[-1].client_id + 1:
+                session.add(Client(client_id, values[0], values[1], values[2], values[3], values[4]))
+                session.commit()
 
-        models = self.session.query(Model3D).all()
-        model_id = models[-1].model_id + 1
-        for model in models:
-            if model.model_file == values[5]:
-                model_id = model.model_id
+            # Поиск модели в бд
+            models = session.query(Model3D).all()
+            model_id = models[-1].model_id + 1
+            for model in models:
+                if model.model_file == values[5]:
+                    model_id = model.model_id
 
-        if model_id == models[-1].model_id + 1:
-            self.session.add(Model3D(model_id, values[5]))
+            # Если модель не найдена, добавляется новая модель
+            if model_id == models[-1].model_id + 1:
+                session.add(Model3D(model_id, values[5]))
+                session.commit()
 
-        order_number = self.session.query(alc.func.max(Order.order_number)).one()[0] + 1
-        self.session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 'В обработке'))
+            # Определение номера заказа
+            order_number = session.query(alc.func.max(Order.order_number)).one()[0] + 1
+            session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 0, 1))
+            session.commit()
 
-        material_id = self.session.query(alc.func.max(Material.material_id)).one()[0]
-        self.session.add(Material(material_id, values[6], values[7]))
+            # Определение id материала для заказа
+            material_id = session.query(alc.func.max(Material.material_id)).one()[0] + 1
+            session.add(Material(material_id, values[6], values[7]))
+            session.commit()
 
-        self.session.add(OrderMaterial(order_number, material_id))
+            session.add(OrderMaterial(order_number, material_id))
+            session.commit()
 
-        self.session.add(OrderEmployee(order_number, values[11]))
-        self.session.commit()
+            session.add(OrderEmployee(order_number, values[11]))
+            session.commit()
 
-        if values[8] != '':
-            self.session.add(ExtraInformation(order_number, values[8]))
-            self.session.commit()
+            # Если есть дополнительная информация, она добавляется в бд
+            if values[8] != '':
+                session.add(ExtraInformation(order_number, values[8]))
+                session.commit()
 
+            self.send_order_to_worker(order_number)
+            session.commit()
+        finally:
+            session.close()
+
+    # Обновление информации о заказе
     def update_order_info(self, values):
-        order = self.session.query(Order).filter_by(order_number=int(values[0])).one()
+        session = self.Session()
+        try:
+            order = session.query(Order).filter_by(order_number=int(values[0])).one()
 
-        self.session.query(Model3D).filter_by(model_id=order.model_id).update({Model3D.model_file: values[6]})
-        self.session.query(Order).filter_by(order_number=order.order_number).\
-            update({Order.short_description: values[10], Order.price: values[11]})
+            session.query(Model3D).filter_by(model_id=order.model_id).update({Model3D.model_file: values[6]})
+            session.query(Order).filter_by(order_number=order.order_number).\
+                update({Order.short_description: values[10], Order.price: values[11]})
 
-        material_id = self.session.query(Material.material_id).join(OrderMaterial).\
-            filter_by(order_number=order.order_number).first()[0]
+            material_id = session.query(Material.material_id).join(OrderMaterial).\
+                filter_by(order_number=order.order_number).first()[0]
 
-        self.session.query(Material).filter_by(material_id=material_id).\
-            update({Material.type: values[7], Material.color: values[8]})
+            session.query(Material).filter_by(material_id=material_id).\
+                update({Material.type: values[7], Material.color: values[8]})
 
-        if values[9] == '' and self.session.query(ExtraInformation.info).filter_by(order_number=order.order_number).one()[0] != '':
-            self.session.delete(self.session.query(ExtraInformation).filter_by(order_number=order.order_number).one())
-        else:
-            self.session.query(ExtraInformation).filter_by(order_number=order.order_number).\
-                update({ExtraInformation.info: values[9]})
+            if values[9] == '' and session.query(ExtraInformation.info).filter_by(order_number=order.order_number).one()[0] != '':
+                session.delete(session.query(ExtraInformation).filter_by(order_number=order.order_number).one())
+            else:
+                session.query(ExtraInformation).filter_by(order_number=order.order_number).\
+                    update({ExtraInformation.info: values[9]})
 
-        self.session.delete(self.session.query(OrderModification).filter_by(order_number=order.order_number).first())
+            session.delete(session.query(OrderModification).filter_by(order_number=order.order_number).first())
 
-        self.session.commit()
+            self.send_order_to_worker(order.order_number)
 
+            session.commit()
+        finally:
+            session.close()
+
+    # Получение списка телефонов всех клиентов
     def get_phones(self):
-        numbers = []
-        for record in self.session.query(Client):
-            numbers.append(record.telephone_number)
-        return numbers
+        session = self.Session()
+        try:
+            numbers = []
+            for record in session.query(Client):
+                numbers.append(record.telephone_number)
+            return numbers
+        finally:
+            session.close()
 
+    # Получение информации о клиенте по его телефону
     def get_client_info_by_phone(self, phone_number):
-        for record in self.session.query(Client).filter_by(telephone_number=phone_number):
-            return [record.surname, record.name, record.patronymic, record.telephone_number, record.email]
+        session = self.Session()
+        try:
+            for record in session.query(Client).filter_by(telephone_number=phone_number):
+                return [record.surname, record.name, record.patronymic, record.email]
+        finally:
+            session.close()
 
 
+# Класс для взаимодействия с бд для работника
 class WorkerConnection:
     def __init__(self, worker_id):
         self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
-        self.session = self.Session()
+        Base.metadata.create_all(self.engine)
         self.worker_id = worker_id
 
+    # Получение информации о текущих заказах работника
     def get_orders_info(self):
-        orders = []
-        for record in self.session.query(Order, Statuses).join(Statuses).\
-                join(OrderEmployee).filter_by(employee_id=self.worker_id):
-            orders.append([record.Order.order_number, 0, record.Statuses.status_name])
-        requests_dates = dict()
-        for record in self.session.query(Request):
-            requests_dates[record.order_number] = record.end_date
-        for order in orders:
-            if order[0] in requests_dates.keys():
-                order[1] = requests_dates[order[0]]
-        return orders
+        session = self.Session()
+        try:
+            orders = []
+            for record in session.query(Order, Statuses).join(Statuses).filter(Order.status.in_((2, 3, 5))).\
+                    join(OrderEmployee).filter_by(employee_id=self.worker_id):
+                orders.append([record.Order.order_number, 0, record.Statuses.status_name])
+            requests_dates = dict()
+            # Получение информации о датах поступления материалов
+            for record in session.query(Request):
+                requests_dates[record.order_number] = record.end_date
+            # Заполнение информации о датах поступления материалов
+            for order in orders:
+                if order[0] in requests_dates.keys():
+                    order[1] = requests_dates[order[0]]
+            return orders
+        finally:
+            session.close()
 
+    # Получение расширенной информации о заказе
     def get_more_order_info(self, order_number):
-        for record in self.session.query(Order, Material, Model3D, ExtraInformation).\
-                filter_by(order_number=order_number).join(ExtraInformation).join(OrderMaterial).join(Material):
-            return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
-                    record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
+        session = self.Session()
+        try:
+            # Если есть расширенная информация о заказе, она добавляется в список
+            if session.query(ExtraInformation).filter_by(order_number=order_number) is not None:
+                for record in session.query(Order, Material, Model3D, ExtraInformation).\
+                        filter_by(order_number=order_number).join(ExtraInformation).join(OrderMaterial).join(Material):
+                    return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
+                            record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
+            for record in session.query(Order, Material, Model3D).\
+                    filter_by(order_number=order_number).join(OrderMaterial).join(Material):
+                return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
+                        record.Model3D.model_file, record.Order.short_description]
+        finally:
+            session.close()
 
+    # Получение информации о новых заказах работника
     def get_new_orders(self):
-        new_orders = []
-        for record in self.session.query(Order, Model3D).filter_by(status=1).join(OrderEmployee).\
-                filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(OrderMaterial).join(Material):
-            new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
-                               record.Material.type + ' ' + record.Material.color])
-        return new_orders
+        session = self.Session()
+        try:
+            new_orders = []
+            for record in session.query(Order, Model3D, Material).filter_by(status=1).join(OrderEmployee).\
+                    filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(OrderMaterial).join(Material):
+                new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
+                                   record.Material.type + ' ' + record.Material.color])
+            return new_orders
+        finally:
+            session.close()
+
+    # Приём работником заказа
+    def take_order(self, order_number):
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({'status': 2})
+            session.commit()
+        finally:
+            session.close()
+
+    # Отправка заказа на доработку
+    def send_order_to_modify(self, order_number, mark):
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({'status': 4})
+            session.add(OrderModification(order_number, mark))
+            session.commit()
+        finally:
+            session.close()
+
+    # Завершение заказа
+    def complete_order(self, order_number):
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({'status': 6})
+            session.commit()
+        finally:
+            session.close()
 
 
-
-engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
-Session = alc.orm.sessionmaker(engine)
-session = Session()
+# engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+# Session = alc.orm.sessionmaker(engine)
+# session = Session()
 # print(session.query(Order).filter(Order.status.in_([1, 2, 3, 4, 5, 6])).all())
 # print(session.query(Employee, Occupation).join(Occupation).all())
 
 # worker_con = WorkerConnection(2)
-# print(worker_con.get_orders_info())
+# print(worker_con.get_more_order_info('1'))
+
+# manager_con = ManagerConnection(1)
+# manager_con.send_order_to_worker()
+

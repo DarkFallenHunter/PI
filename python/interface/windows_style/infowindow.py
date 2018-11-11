@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class UiMoreOrderInfoWorker(object):
     def setupUi(self, more_order_info):
         more_order_info.setObjectName("more_order_info")

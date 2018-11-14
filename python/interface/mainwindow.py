@@ -1,4 +1,5 @@
 import sys
+import hashlib
 import model.dbtables as db
 from interface.windows_style.authorizationstyle import UiAuthorizationWindow
 from interface.windows_style.managerwindow import UiManagerWindow
@@ -50,7 +51,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Переход к необходимому окну в зависимости от должности работника
     def next_window(self):
-        employee_info = db.search_employee(self.ui.login_text.text(), self.ui.password_text.text())
+        hash_var = hashlib.md5()
+        hash_var.update(self.ui.password_text.text().encode('utf-8'))
+        pass_hex = hash_var.hexdigest()
+        employee_info = db.search_employee(self.ui.login_text.text(), pass_hex)
         # Если такой записи нет в базе данных, появляется ошибка
         if employee_info is None:
             self.error_window.show()
@@ -306,7 +310,7 @@ class WorkerMainWindow(UiWorkerWindow):
         self.more_info_order_button.clicked.connect(self.show_more_info)
         self.take_order_button.clicked.connect(self.take_new_order)
         self.order_info_window.ui.return_order_button.clicked.connect(self.modification_window.show)
-        self.modification_window.ui.send_modification_button(self.send_order_to_modification)
+        self.modification_window.ui.send_modification_button.clicked.connect(self.send_order_to_modification)
 
     # Функция для закполнения таблиц
     def fill_table(self, orders, table):

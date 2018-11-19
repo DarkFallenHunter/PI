@@ -1,12 +1,14 @@
+# -*- coding: utf-8 -*-
+
 import sys
 import hashlib
-import model.dbtables as db
-from interface.windows_style.authorizationstyle import UiAuthorizationWindow
-from interface.windows_style.managerwindow import UiManagerWindow
-from interface.windows_style.moreorderinfo import UiMoreOrderInfoManager
-from interface.windows_style.workerwindow import UiWorkerWindow
-from interface.windows_style.infowindow import UiMoreOrderInfoWorker
-from interface.windows_style.modificationwindow import UiModificationWindow
+import data.dbtables as db
+from interface.authorization_window import UiAuthorizationWindow
+from interface.manager_window import UiManagerWindow
+from interface.more_order_info_manager import UiMoreOrderInfoManager
+from interface.worker_window import UiWorkerWindow
+from interface.more_order_info_worker import UiMoreOrderInfoWorker
+from interface.modification_window import UiModificationWindow
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 
@@ -15,7 +17,7 @@ class ErrorWindow(QtWidgets.QMessageBox):
     def __init__(self, message, title, parent=None):
         QtWidgets.QMessageBox.__init__(self, parent)
         self.setStyleSheet("background-color: rgb(0, 51, 102);\n"
-                                 "color: rgb(255, 255, 255);")
+                            "color: rgb(255, 255, 255);")
         self.setIcon(QtWidgets.QMessageBox.Warning)
         self.setText(message)
         self.setWindowTitle(title)
@@ -89,6 +91,9 @@ class ManagerMainWindow(UiManagerWindow):
         self.show_info_error_window = ErrorWindow('Выберите необходимый заказ!', 'Ошибка')
 
     def reinit(self):
+        self.create_order_button.clicked.connect(self.show_create_order)
+        self.refactor_order_button.clicked.connect(self.show_refactor_order)
+        self.show_orders_info_button.clicked.connect(self.show_orders_info)
         self.fill_table()
         self.fill_combobox(self.type_of_plastic_combobox, self.db_connection.get_plastic_types())
         self.fill_combobox(self.need_refactoring_order_combobox, self.db_connection.get_needed_modification_orders())
@@ -99,7 +104,6 @@ class ManagerMainWindow(UiManagerWindow):
         self.show_more_info_button.clicked.connect(self.show_more_info)
         self.type_of_plastic_combobox.currentIndexChanged.\
             connect(lambda: self.set_colors_for_current_plastic(False))
-        self.color_of_plastic_combobox.setCurrentIndex(-1)
         self.need_refactoring_order_combobox.currentIndexChanged.connect(self.fill_refactor_order_info)
         self.type_of_plastic_combobox_ref.currentIndexChanged.\
             connect(lambda: self.set_colors_for_current_plastic(True))
@@ -108,6 +112,21 @@ class ManagerMainWindow(UiManagerWindow):
         self.add_order_button.clicked.connect(self.add_new_order)
         self.refactor_order_button_ref.clicked.connect(self.update_order)
         self.entering_number()
+
+    def show_create_order(self):
+        self.manager_create_order_group.show()
+        self.manager_refactor_order_group.hide()
+        self.manager_show_orders_info_group.hide()
+
+    def show_refactor_order(self):
+        self.manager_refactor_order_group.show()
+        self.manager_show_orders_info_group.hide()
+        self.manager_create_order_group.hide()
+
+    def show_orders_info(self):
+        self.manager_create_order_group.hide()
+        self.manager_refactor_order_group.hide()
+        self.manager_show_orders_info_group.show()
 
     # Выбор файла для нового или дорабатываемого заказа
     def select_file(self, ref):
@@ -144,17 +163,23 @@ class ManagerMainWindow(UiManagerWindow):
     def set_colors_for_current_plastic(self, ref):
         # Для дорабатываемого заказа
         if ref:
-            self.fill_combobox(self.color_of_plastic_combobox_ref,
-                               self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox_ref.currentText()))
+            widget_list = self.color_of_plastic_list_ref
+            list_of_colors = self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox_ref.currentText())
         # Для нового заказа
         else:
-            self.fill_combobox(self.color_of_plastic_combobox,
-                               self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox.currentText()))
+            widget_list = self.color_of_plastic_list
+            list_of_colors = self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox.currentText())
+
+        widget_list.clear()
+        for color in list_of_colors:
+            widget_list.addItem(color)
 
     # Заполнение информации о дорабатываемом заказе
     def fill_refactor_order_info(self):
         if self.need_refactoring_order_combobox.currentText() != '':
-            order_info = self.db_connection.get_needed_modification_order_info(int(self.need_refactoring_order_combobox.currentText()))
+            order_info = self.db_connection.get_needed_modification_order_info(
+                int(self.need_refactoring_order_combobox.currentText())
+            )
             self.note_of_refactoring_text.setText(order_info[0])
             self.surname_text_ref.setText(order_info[1])
             self.name_text_ref.setText(order_info[2])
@@ -163,12 +188,14 @@ class ManagerMainWindow(UiManagerWindow):
             self.email_text_ref.setText(order_info[5])
             self.selected_file_label_ref.setText(order_info[6])
             self.refactor_filename = order_info[6]
-            self.type_of_plastic_combobox_ref.setCurrentText(order_info[7])
+            self.type_of_plastic_combobox_ref.setCurrentText(order_info[7]['type'])
             self.set_colors_for_current_plastic(True)
-            self.color_of_plastic_combobox_ref.setCurrentText(order_info[8])
-            self.additional_info_text_ref.setText(order_info[9])
-            self.short_description_text_ref.setText(order_info[10])
-            self.finale_price_label_ref.setText(str(order_info[11]) + ' рублей')
+            for i in range(self.color_of_plastic_list_ref.count()):
+                if self.color_of_plastic_list_ref.item(i).text() in order_info[7]['colors']:
+                    self.color_of_plastic_list_ref.item(i).setSelected(True)
+            self.additional_info_text_ref.setText(order_info[8])
+            self.short_description_text_ref.setText(order_info[9])
+            self.finale_price_label_ref.setText(str(order_info[10]) + ' рублей')
 
     # Заполение таблицы с информацией о заказах
     def fill_table(self):
@@ -206,8 +233,11 @@ class ManagerMainWindow(UiManagerWindow):
     def add_new_order(self):
         self.db_connection.add_new_order([self.surname_text.text(), self.name_text.text(), self.patronymic_text.text(),
                                           self.phone_text.text(), self.email_text.text(), self.create_filename,
-                                          self.type_of_plastic_combobox.currentText(),
-                                          self.color_of_plastic_combobox.currentText(),
+                                          {
+                                              'type': self.type_of_plastic_combobox.currentText(),
+                                              'colors': [item.text() for item in
+                                                         self.color_of_plastic_list.selectedItems()]
+                                          },
                                           self.additional_info_text.toPlainText(),
                                           self.short_description_text.toPlainText(),
                                           self.finale_price_label.text().split()[0],
@@ -222,7 +252,7 @@ class ManagerMainWindow(UiManagerWindow):
         self.create_filename = ''
         self.selected_file_label.setText('Файл не выбран')
         self.type_of_plastic_combobox.setCurrentIndex(-1)
-        self.color_of_plastic_combobox.setCurrentIndex(-1)
+        self.color_of_plastic_list.clear()
         self.additional_info_text.clear()
         self.short_description_text.clear()
         self.finale_price_label.setText('0 рублей')
@@ -232,12 +262,27 @@ class ManagerMainWindow(UiManagerWindow):
 
     # Обновление информации о заказа
     def update_order(self):
+        print([self.need_refactoring_order_combobox.currentText(),
+              self.surname_text_ref.text(), self.name_text_ref.text(),
+              self.patronymic_text_ref.text(), self.phone_text_ref.text(),
+              self.email_text_ref.text(), self.refactor_filename,
+              {
+                  'type': self.type_of_plastic_combobox_ref.currentText(),
+                  'colors': [item.text() for item in
+                             self.color_of_plastic_list_ref.selectedItems()]
+              },
+              self.additional_info_text_ref.toPlainText(),
+              self.short_description_text_ref.toPlainText(),
+              self.finale_price_label_ref.text().split()[0]])
         self.db_connection.update_order_info([self.need_refactoring_order_combobox.currentText(),
                                               self.surname_text_ref.text(), self.name_text_ref.text(),
                                               self.patronymic_text_ref.text(), self.phone_text_ref.text(),
                                               self.email_text_ref.text(), self.refactor_filename,
-                                              self.type_of_plastic_combobox_ref.currentText(),
-                                              self.color_of_plastic_combobox_ref.currentText(),
+                                              {
+                                                  'type': self.type_of_plastic_combobox_ref.currentText(),
+                                                  'colors': [item.text() for item in
+                                                             self.color_of_plastic_list_ref.selectedItems()]
+                                              },
                                               self.additional_info_text_ref.toPlainText(),
                                               self.short_description_text_ref.toPlainText(),
                                               self.finale_price_label_ref.text().split()[0]])
@@ -254,7 +299,7 @@ class ManagerMainWindow(UiManagerWindow):
         self.refactor_filename = ''
         self.selected_file_label_ref.setText('Файл не выбран')
         self.type_of_plastic_combobox_ref.setCurrentIndex(-1)
-        self.color_of_plastic_combobox_ref.setCurrentIndex(-1)
+        self.color_of_plastic_list_ref.clear()
         self.additional_info_text_ref.clear()
         self.short_description_text_ref.clear()
         self.finale_price_label_ref.setText('0 рублей')

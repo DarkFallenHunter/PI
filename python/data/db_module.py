@@ -480,14 +480,29 @@ class ManagerConnection:
     def get_needed_modification_order_info(self, order_number):
         session = self.Session()
         try:
-            for record in session.query(OrderModification, Order, Client, Model3D,
-                                        OrderMaterial, Material, ExtraInformation).\
-                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).join(ExtraInformation).\
-                    join(OrderMaterial).join(Material):
-                return [record.OrderModification.mark, record.Client.surname, record.Client.name,
-                        record.Client.patronymic, record.Client.telephone_number, record.Client.email,
-                        record.Model3D.model_file, record.Material.type, record.Material.color,
-                        record.ExtraInformation.info, record.Order.short_description, record.Order.price]
+            if len(session.query(ExtraInformation).filter_by(order_number=order_number).all()) != 0:
+                record = session.query(OrderModification, Order, Client, Model3D,
+                                       OrderMaterial, Material, ExtraInformation).\
+                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).\
+                    join(ExtraInformation).join(OrderMaterial).join(Material).first()
+                result = [record.OrderModification.mark, record.Client.surname, record.Client.name,
+                          record.Client.patronymic, record.Client.telephone_number, record.Client.email,
+                          record.Model3D.model_file, {'type': record.Material.type, 'colors': []},
+                          record.ExtraInformation.info, record.Order.short_description, record.Order.price]
+            else:
+                record = session.query(OrderModification, Order, Client, Model3D,
+                                       OrderMaterial, Material).\
+                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).\
+                    join(OrderMaterial).join(Material).first()
+                result = [record.OrderModification.mark, record.Client.surname, record.Client.name,
+                          record.Client.patronymic, record.Client.telephone_number, record.Client.email,
+                          record.Model3D.model_file, {'type': record.Material.type, 'colors': []}, '',
+                          record.Order.short_description, record.Order.price]
+
+            for record in session.query(Material).join(OrderMaterial).filter_by(order_number=order_number):
+                result[7]['colors'].append(record.color)
+
+            return result
         finally:
             session.close()
 
@@ -564,23 +579,24 @@ class ManagerConnection:
 
             # Определение номера заказа
             order_number = session.query(alc.func.max(Order.order_number)).one()[0] + 1
-            session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 0, 1))
+            session.add(Order(order_number, values[9], client_id, model_id, values[8], date.today(), 0, 1))
             session.commit()
 
             # Определение id материала для заказа
             material_id = session.query(alc.func.max(Material.material_id)).one()[0] + 1
-            session.add(Material(material_id, values[6], values[7]))
-            session.commit()
+            for color in values[6]['colors']:
+                session.add(Material(material_id, values[6]['type'], color))
+                session.commit()
+                session.add(OrderMaterial(order_number, material_id))
+                session.commit()
+                material_id += 1
 
-            session.add(OrderMaterial(order_number, material_id))
-            session.commit()
-
-            session.add(OrderEmployee(order_number, values[11]))
+            session.add(OrderEmployee(order_number, values[10]))
             session.commit()
 
             # Если есть дополнительная информация, она добавляется в бд
-            if values[8] != '':
-                session.add(ExtraInformation(order_number, values[8]))
+            if values[7] != '':
+                session.add(ExtraInformation(order_number, values[7]))
                 session.commit()
 
             self.send_order_to_worker(order_number)
@@ -596,19 +612,32 @@ class ManagerConnection:
 
             session.query(Model3D).filter_by(model_id=order.model_id).update({Model3D.model_file: values[6]})
             session.query(Order).filter_by(order_number=order.order_number).\
-                update({Order.short_description: values[10], Order.price: values[11]})
+                update({Order.short_description: values[9], Order.price: values[10]})
 
-            material_id = session.query(Material.material_id).join(OrderMaterial).\
-                filter_by(order_number=order.order_number).first()[0]
+            materials = session.query(Material).join(OrderMaterial).\
+                filter_by(order_number=order.order_number).all()
 
-            session.query(Material).filter_by(material_id=material_id).\
-                update({Material.type: values[7], Material.color: values[8]})
+            if [material.color for material in materials] != values[7]['colors']:
+                for material in materials:
+                    session.delete(material)
+
+                order_materials = session.query(OrderMaterial).filter_by(order_number=order.order_number).all()
+                for order_material in order_materials:
+                    session.delete(order_material)
+
+                material_id = session.query(alc.func.max(Material.material_id)).one()[0] + 1
+                for color in values[7]['colors']:
+                    session.add(Material(material_id, values[7]['type'], color))
+                    session.commit()
+                    session.add(OrderMaterial(order.order_number, material_id))
+                    session.commit()
+                    material_id += 1
 
             if values[9] == '' and session.query(ExtraInformation.info).filter_by(order_number=order.order_number).one()[0] != '':
                 session.delete(session.query(ExtraInformation).filter_by(order_number=order.order_number).one())
             else:
                 session.query(ExtraInformation).filter_by(order_number=order.order_number).\
-                    update({ExtraInformation.info: values[9]})
+                    update({ExtraInformation.info: values[8]})
 
             session.delete(session.query(OrderModification).filter_by(order_number=order.order_number).first())
 
@@ -635,6 +664,14 @@ class ManagerConnection:
         try:
             for record in session.query(Client).filter_by(telephone_number=phone_number):
                 return [record.surname, record.name, record.patronymic, record.email]
+        finally:
+            session.close()
+
+    # Отмена заказа
+    def cancel_order(self, order_number):
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({Order.status: 8})
         finally:
             session.close()
 
@@ -672,7 +709,7 @@ class WorkerConnection:
         session = self.Session()
         try:
             # Если есть расширенная информация о заказе, она добавляется в список
-            if session.query(ExtraInformation).filter_by(order_number=order_number) is not None:
+            if len(session.query(ExtraInformation).filter_by(order_number=order_number).all()) != 0:
                 for record in session.query(Order, Material, Model3D, ExtraInformation).\
                         filter_by(order_number=order_number).join(ExtraInformation).join(OrderMaterial).join(Material):
                     return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
@@ -726,9 +763,12 @@ class WorkerConnection:
             session.close()
 
 
-# engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
-# Session = alc.orm.sessionmaker(engine)
-# session = Session()
+engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+Session = alc.orm.sessionmaker(engine)
+session = Session()
+# materials = session.query(Material).join(OrderMaterial).filter_by(order_number=1).all()
+# print(materials)
+# print([material.color for material in materials])
 # print(session.query(Order).filter(Order.status.in_([1, 2, 3, 4, 5, 6])).all())
 # print(session.query(Employee, Occupation).join(Occupation).all())
 
@@ -736,5 +776,6 @@ class WorkerConnection:
 # print(worker_con.get_more_order_info('1'))
 
 # manager_con = ManagerConnection(1)
-# manager_con.send_order_to_worker()
-
+# manager_con.update_order_info(['7', 'Борзых', 'Никита', 'Юрьевич', '+7-999-888-32-32', 'allyru@gmail.com',
+#                                'C:/Users/Hunte/Desktop/Ашан Гагаринский 08.11.2018/IMG_0977.JPG',
+#                                {'type': 'ABS пластик', 'colors': ['Зелёный']}, '', 'Распечатать зелёное ведёрко', '0.00'])

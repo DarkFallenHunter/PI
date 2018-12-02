@@ -59,20 +59,23 @@ class MainWindow(QtWidgets.QMainWindow):
         pass_hex = hash_var.hexdigest()
         employee_info = db.search_employee(self.ui.login_text.text(), pass_hex)
         # Если такой записи нет в базе данных, появляется ошибка
-        if employee_info is None:
-            self.error_window.show()
-        elif employee_info[0] == 1:
-            self.ui = ManagerMainWindow(employee_info[1])
-            self.ui.setupUi(self)
-            self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
-            self.ui.reinit()
-        elif employee_info[0] == 2:
-            self.ui = WorkerMainWindow(employee_info[1])
-            self.ui.setupUi(self)
-            self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
-            self.ui.reinit()
-        else:
-            print("!")
+        try:
+            if employee_info is None:
+                self.error_window.show()
+            elif employee_info[0] == 1:
+                self.ui = ManagerMainWindow(employee_info[1])
+                self.ui.setupUi(self)
+                self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
+                self.ui.reinit()
+            elif employee_info[0] == 2:
+                self.ui = WorkerMainWindow(employee_info[1])
+                self.ui.setupUi(self)
+                self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
+                self.ui.reinit()
+            else:
+                print("!")
+        except Exception as e:
+            print(e)
 
 
 # Окно для менеджера
@@ -166,11 +169,11 @@ class ManagerMainWindow(UiManagerWindow):
     def set_colors_for_current_plastic(self, ref):
         # Для дорабатываемого заказа
         if ref:
-            widget_list = self.color_of_plastic_list_ref
+            widget_list = self.color_of_plastic_combobox_ref
             list_of_colors = self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox_ref.currentText())
         # Для нового заказа
         else:
-            widget_list = self.color_of_plastic_list
+            widget_list = self.color_of_plastic_combobox
             list_of_colors = self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox.currentText())
 
         widget_list.clear()
@@ -189,16 +192,16 @@ class ManagerMainWindow(UiManagerWindow):
             self.patronymic_text_ref.setText(order_info[3])
             self.phone_text_ref.setText(order_info[4])
             self.email_text_ref.setText(order_info[5])
+            if order_info[6].split('.')[-1] != 'stl':
+                self.sketch_of_model_radio_ref.setChecked(True)
             self.selected_file_label_ref.setText(order_info[6])
             self.refactor_filename = order_info[6]
-            self.type_of_plastic_combobox_ref.setCurrentText(order_info[7]['type'])
+            self.type_of_plastic_combobox_ref.setCurrentText(order_info[7])
             self.set_colors_for_current_plastic(True)
-            for i in range(self.color_of_plastic_list_ref.count()):
-                if self.color_of_plastic_list_ref.item(i).text() in order_info[7]['colors']:
-                    self.color_of_plastic_list_ref.item(i).setSelected(True)
-            self.additional_info_text_ref.setText(order_info[8])
-            self.short_description_text_ref.setText(order_info[9])
-            self.finale_price_label_ref.setText(str(order_info[10]) + ' рублей')
+            self.color_of_plastic_combobox_ref.setCurrentText(order_info[8])
+            self.additional_info_text_ref.setText(order_info[9])
+            self.short_description_text_ref.setText(order_info[10])
+            self.finale_price_label_ref.setText(str(order_info[11]) + ' рублей')
 
     # Заполение таблицы с информацией о заказах
     def fill_table(self):
@@ -236,11 +239,8 @@ class ManagerMainWindow(UiManagerWindow):
     def add_new_order(self):
         self.db_connection.add_new_order([self.surname_text.text(), self.name_text.text(), self.patronymic_text.text(),
                                           self.phone_text.text(), self.email_text.text(), self.create_filename,
-                                          {
-                                              'type': self.type_of_plastic_combobox.currentText(),
-                                              'colors': [item.text() for item in
-                                                         self.color_of_plastic_list.selectedItems()]
-                                          },
+                                          self.type_of_plastic_combobox.currentText(),
+                                          self.color_of_plastic_combobox.currentText(),
                                           self.additional_info_text.toPlainText(),
                                           self.short_description_text.toPlainText(),
                                           self.finale_price_label.text().split()[0],
@@ -255,7 +255,7 @@ class ManagerMainWindow(UiManagerWindow):
         self.create_filename = ''
         self.selected_file_label.setText('Файл не выбран')
         self.type_of_plastic_combobox.setCurrentIndex(-1)
-        self.color_of_plastic_list.clear()
+        self.color_of_plastic_combobox.clear()
         self.additional_info_text.clear()
         self.short_description_text.clear()
         self.finale_price_label.setText('0 рублей')
@@ -272,7 +272,7 @@ class ManagerMainWindow(UiManagerWindow):
         #       {
         #           'type': self.type_of_plastic_combobox_ref.currentText(),
         #           'colors': [item.text() for item in
-        #                      self.color_of_plastic_list_ref.selectedItems()]
+        #                      self.color_of_plastic_combobox_ref.selectedItems()]
         #       },
         #       self.additional_info_text_ref.toPlainText(),
         #       self.short_description_text_ref.toPlainText(),
@@ -281,11 +281,8 @@ class ManagerMainWindow(UiManagerWindow):
                                               self.surname_text_ref.text(), self.name_text_ref.text(),
                                               self.patronymic_text_ref.text(), self.phone_text_ref.text(),
                                               self.email_text_ref.text(), self.refactor_filename,
-                                              {
-                                                  'type': self.type_of_plastic_combobox_ref.currentText(),
-                                                  'colors': [item.text() for item in
-                                                             self.color_of_plastic_list_ref.selectedItems()]
-                                              },
+                                              self.type_of_plastic_combobox_ref.currentText(),
+                                              self.color_of_plastic_combobox_ref.currentText(),
                                               self.additional_info_text_ref.toPlainText(),
                                               self.short_description_text_ref.toPlainText(),
                                               self.finale_price_label_ref.text().split()[0]])
@@ -302,7 +299,7 @@ class ManagerMainWindow(UiManagerWindow):
         self.refactor_filename = ''
         self.selected_file_label_ref.setText('Файл не выбран')
         self.type_of_plastic_combobox_ref.setCurrentIndex(-1)
-        self.color_of_plastic_list_ref.clear()
+        self.color_of_plastic_combobox_ref.clear()
         self.additional_info_text_ref.clear()
         self.short_description_text_ref.clear()
         self.finale_price_label_ref.setText('0 рублей')

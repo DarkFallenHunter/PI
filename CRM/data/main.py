@@ -116,18 +116,32 @@ class ManagerMainWindow(UiManagerWindow):
         self.add_order_button.clicked.connect(self.add_new_order)
         self.refactor_order_button_ref.clicked.connect(self.update_order)
         self.entering_number()
+        self.delete_order_button.clicked.connect(self.cancel_order)
 
     def show_create_order(self):
+        if not self.manager_refactor_order_group.isHidden():
+            self.clear_all_fields(True)
+
         self.manager_create_order_group.show()
         self.manager_refactor_order_group.hide()
         self.manager_show_orders_info_group.hide()
 
     def show_refactor_order(self):
-        self.manager_refactor_order_group.show()
-        self.manager_show_orders_info_group.hide()
-        self.manager_create_order_group.hide()
+        if not self.manager_create_order_group.isHidden():
+            self.clear_all_fields(False)
+
+        if self.manager_refactor_order_group.isHidden():
+            self.manager_refactor_order_group.show()
+            self.manager_show_orders_info_group.hide()
+            self.manager_create_order_group.hide()
 
     def show_orders_info(self):
+        if not self.manager_refactor_order_group.isHidden():
+            self.clear_all_fields(True)
+
+        if not self.manager_create_order_group.isHidden():
+            self.clear_all_fields(False)
+
         self.manager_create_order_group.hide()
         self.manager_refactor_order_group.hide()
         self.manager_show_orders_info_group.show()
@@ -179,6 +193,36 @@ class ManagerMainWindow(UiManagerWindow):
         widget_list.clear()
         for color in list_of_colors:
             widget_list.addItem(color)
+
+    def clear_all_fields(self, ref):
+        if not ref:
+            self.surname_text.clear()
+            self.name_text.clear()
+            self.patronymic_text.clear()
+            self.phone_text.clear()
+            self.email_text.clear()
+            self.create_filename = ''
+            self.selected_file_label.setText('Файл не выбран')
+            self.type_of_plastic_combobox.setCurrentIndex(-1)
+            self.color_of_plastic_combobox.clear()
+            self.additional_info_text.clear()
+            self.short_description_text.clear()
+            self.finale_price_label.setText('0 рублей')
+        else:
+            self.note_of_refactoring_text.clear()
+            self.need_refactoring_order_combobox.setCurrentIndex(-1)
+            self.surname_text_ref.clear()
+            self.name_text_ref.clear()
+            self.patronymic_text_ref.clear()
+            self.phone_text_ref.clear()
+            self.email_text_ref.clear()
+            self.refactor_filename = ''
+            self.selected_file_label_ref.setText('Файл не выбран')
+            self.type_of_plastic_combobox_ref.setCurrentIndex(-1)
+            self.color_of_plastic_combobox_ref.clear()
+            self.additional_info_text_ref.clear()
+            self.short_description_text_ref.clear()
+            self.finale_price_label_ref.setText('0 рублей')
 
     # Заполнение информации о дорабатываемом заказе
     def fill_refactor_order_info(self):
@@ -247,36 +291,22 @@ class ManagerMainWindow(UiManagerWindow):
                                           self.manager_id])
 
         # Очистка всех полей
-        self.surname_text.clear()
-        self.name_text.clear()
-        self.patronymic_text.clear()
-        self.phone_text.clear()
-        self.email_text.clear()
-        self.create_filename = ''
-        self.selected_file_label.setText('Файл не выбран')
-        self.type_of_plastic_combobox.setCurrentIndex(-1)
-        self.color_of_plastic_combobox.clear()
-        self.additional_info_text.clear()
-        self.short_description_text.clear()
-        self.finale_price_label.setText('0 рублей')
+        self.clear_all_fields(False)
         # Обновление комплитера для телефонов и таблицы с заказами
         self.entering_number()
         self.fill_table()
 
     # Обновление информации о заказа
     def update_order(self):
-        # print([self.need_refactoring_order_combobox.currentText(),
-        #       self.surname_text_ref.text(), self.name_text_ref.text(),
-        #       self.patronymic_text_ref.text(), self.phone_text_ref.text(),
-        #       self.email_text_ref.text(), self.refactor_filename,
-        #       {
-        #           'type': self.type_of_plastic_combobox_ref.currentText(),
-        #           'colors': [item.text() for item in
-        #                      self.color_of_plastic_combobox_ref.selectedItems()]
-        #       },
-        #       self.additional_info_text_ref.toPlainText(),
-        #       self.short_description_text_ref.toPlainText(),
-        #       self.finale_price_label_ref.text().split()[0]])
+        print([self.need_refactoring_order_combobox.currentText(),
+              self.surname_text_ref.text(), self.name_text_ref.text(),
+              self.patronymic_text_ref.text(), self.phone_text_ref.text(),
+              self.email_text_ref.text(), self.refactor_filename,
+              self.type_of_plastic_combobox_ref.currentText(),
+              self.color_of_plastic_combobox_ref.currentText(),
+              self.additional_info_text_ref.toPlainText(),
+              self.short_description_text_ref.toPlainText(),
+              self.finale_price_label_ref.text().split()[0]])
         self.db_connection.update_order_info([self.need_refactoring_order_combobox.currentText(),
                                               self.surname_text_ref.text(), self.name_text_ref.text(),
                                               self.patronymic_text_ref.text(), self.phone_text_ref.text(),
@@ -289,20 +319,7 @@ class ManagerMainWindow(UiManagerWindow):
 
         # Очистка всех полей
         self.need_refactoring_order_combobox.removeItem(self.need_refactoring_order_combobox.currentIndex())
-        self.note_of_refactoring_text.clear()
-        self.need_refactoring_order_combobox.setCurrentIndex(-1)
-        self.surname_text_ref.clear()
-        self.name_text_ref.clear()
-        self.patronymic_text_ref.clear()
-        self.phone_text_ref.clear()
-        self.email_text_ref.clear()
-        self.refactor_filename = ''
-        self.selected_file_label_ref.setText('Файл не выбран')
-        self.type_of_plastic_combobox_ref.setCurrentIndex(-1)
-        self.color_of_plastic_combobox_ref.clear()
-        self.additional_info_text_ref.clear()
-        self.short_description_text_ref.clear()
-        self.finale_price_label_ref.setText('0 рублей')
+        self.clear_all_fields(True)
         # Обновление таблицы с заказами
         self.fill_table()
 
@@ -321,6 +338,19 @@ class ManagerMainWindow(UiManagerWindow):
         self.name_text.setText(client_info[1])
         self.patronymic_text.setText(client_info[2])
         self.email_text.setText(client_info[3])
+
+    def cancel_order(self):
+        if self.orders_info_table.currentItem() is not None:
+            if self.orders_info_table.currentColumn() != 0:
+                self.orders_info_table.setCurrentCell(self.orders_info_table.currentRow(), 0)
+
+            order_number = self.orders_info_table.currentItem().text()
+            self.orders_info_table.setCurrentCell(-1, -1)
+
+            self.db_connection.cancel_order(int(order_number))
+            self.fill_table()
+        else:
+            self.show_info_error_window.show()
 
 
 # Окно для отображения инормации о заказе

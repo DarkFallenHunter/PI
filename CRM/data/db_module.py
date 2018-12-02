@@ -327,12 +327,14 @@ class Request(Base):
     end_date = alc.Column(alc.Date)
     order_number = alc.Column(alc.Integer)
     material_id = alc.Column(alc.Integer, alc.ForeignKey('information_about_material.material_id'))
+    amount = alc.Column(alc.Integer)
 
-    def __init__(self, request_number, start_date, end_date, order_number):
+    def __init__(self, request_number, start_date, end_date, order_number, amount):
         self.request_number = request_number
         self.start_date = start_date
         self.end_date = end_date
         self.order_number = order_number
+        self.amount = amount
 
     def __repr__(self):
         res_str = str()
@@ -433,7 +435,7 @@ class ManagerConnection:
         session = self.Session()
         try:
             orders = []
-            for record in session.query(Order, Statuses).join(Statuses).\
+            for record in session.query(Order, Statuses).filter(~Order.status.in_((7, 8))).join(Statuses).\
                     join(OrderEmployee).filter_by(employee_id=self.manager_id):
                 orders.append([record.Order.order_number, record.Order.date,
                                record.Order.short_description, record.Statuses.status_name])
@@ -473,15 +475,18 @@ class ManagerConnection:
                                      Client.patronymic, Client.telephone_number, Client.email,
                                      Model3D.model_file, Material.type, Material.color,
                                      ExtraInformation.info, Order.short_description, Order.price).\
-                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client). \
+                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).\
                     join(ExtraInformation).join(Material).first()
             else:
-                return session.query(OrderModification.mark, Client.surname, Client.name,
-                                     Client.patronymic, Client.telephone_number, Client.email,
-                                     Model3D.model_file, Material.type, Material.color, '',
-                                     Order.short_description, Order.price). \
-                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client). \
+                record = session.query(OrderModification.mark, Client.surname, Client.name,
+                                       Client.patronymic, Client.telephone_number, Client.email,
+                                       Model3D.model_file, Material.type, Material.color,
+                                       Order.short_description, Order.price).\
+                    filter_by(order_number=order_number).join(Order).join(Model3D).join(Client).\
                     join(Material).first()
+                return (record.mark, record.surname, record.name, record.patronymic, record.telephone_number,
+                        record.email, record.model_file, record.type, record.color, '', record.short_description,
+                        record.price)
         finally:
             session.close()
 
@@ -563,7 +568,7 @@ class ManagerConnection:
 
             # Определение номера заказа
             order_number = session.query(alc.func.max(Order.order_number)).first()[0] + 1
-            session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 0, 1))
+            session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 0, 1, material_id))
             session.commit()
 
             session.add(OrderEmployee(order_number, values[11]))
@@ -592,15 +597,18 @@ class ManagerConnection:
             session.query(Material).filter_by(material_id=order.material_id).update({Material.type: values[7],
                                                                                      Material.color: values[8]})
 
-            if values[9] == '' and session.query(ExtraInformation.info).filter_by(order_number=order.order_number).one()[0] != '':
-                session.delete(session.query(ExtraInformation).filter_by(order_number=order.order_number).one())
+            extra_info = session.query(ExtraInformation.info).filter_by(order_number=order.order_number).first()
+            if values[9] != '' and not extra_info:
+                session.add(ExtraInformation(int(values[0]), values[9]))
+            elif values[9] == '' and extra_info:
+                session.delete(extra_info)
             else:
                 session.query(ExtraInformation).filter_by(order_number=order.order_number).\
                     update({ExtraInformation.info: values[9]})
 
             session.delete(session.query(OrderModification).filter_by(order_number=order.order_number).first())
 
-            self.send_order_to_worker(order.order_number)
+            order.status = 2
 
             session.commit()
         finally:
@@ -627,22 +635,23 @@ class ManagerConnection:
             session.close()
 
     # Отмена заказа
-    # def cancel_order(self, order_number):
-    #     session = self.Session()
-    #     try:
-    #         session.query(Order).filter_by(order_number=order_number).update({Order.status: 8})
-    #
-    #         material_request = session.query(Request).filter_by(order_number=order_number).first()
-    #
-    #         if material_request is not None:
-    #             amount_of_material = session.query(AmountOfMaterial.amount).join(RequestMaterial).\
-    #                 filter_by(request_number=material_request.request_material).first()
-    #
-    #             session.query(StoreMaterial).filter_by(amount_of_material.material_id).\
-    #                 update({StoreMaterial.amount: (StoreMaterial.amount + amount_of_material.amount)})
-    #
-    #     finally:
-    #         session.close()
+    def cancel_order(self, order_number):
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({Order.status: 8})
+
+            material_request = session.query(Request).filter_by(order_number=order_number).first()
+
+            if material_request is not None:
+                session.query(StoreMaterial).filter_by(material_id=material_request.material_id).\
+                    update({StoreMaterial.amount: (StoreMaterial.amount + material_request.amount)})
+
+                session.delete(material_request)
+
+            session.commit()
+
+        finally:
+            session.close()
 
 
 # Класс для взаимодействия с бд для работника
@@ -749,3 +758,4 @@ class ManagerConnection:
 #                                'C:/Users/Hunte/Desktop/Ашан Гагаринский 08.11.2018/IMG_0977.JPG',
 #                                {'type': 'ABS пластик', 'colors': ['Зелёный']}, '', 'Распечатать зелёное ведёрко', '0.00'])
 # print(manager_con.get_needed_modification_order_info(1), sep='\n')
+# print(manager_con.get_needed_modification_order_info(5))

@@ -1,7 +1,6 @@
 import sys
 import vtk
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
 
 from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
@@ -17,7 +16,7 @@ class UiViewModelWindow(QtWidgets.QMainWindow):
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
 
-    def __init__(self,filename ,parent = None):
+    def __init__(self, filename, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)
         self.vl = QtWidgets.QVBoxLayout()

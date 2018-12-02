@@ -9,25 +9,25 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/CRM$infowindow.coverage" NAME="infowindow Coverage Results" MODIFIED="1541680942310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
-    <SUITE FILE_PATH="coverage/CRM$orderinfowindow.coverage" NAME="orderinfowindow Coverage Results" MODIFIED="1542658757366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$db_module.coverage" NAME="db_module Coverage Results" MODIFIED="1543699096500" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
-    <SUITE FILE_PATH="coverage/CRM$orderinfo.coverage" NAME="orderinfo Coverage Results" MODIFIED="1540490633432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$authorizationwindow.coverage" NAME="authorizationwindow Coverage Results" MODIFIED="1540534713733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
     <SUITE FILE_PATH="coverage/CRM$infodelivery.coverage" NAME="infodelivery Coverage Results" MODIFIED="1543559332128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$view_model_window.coverage" NAME="view_model_window Coverage Results" MODIFIED="1542919854761" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
     <SUITE FILE_PATH="coverage/CRM$choosefile.coverage" NAME="choosefile Coverage Results" MODIFIED="1543558946689" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$managerwindow.coverage" NAME="managerwindow Coverage Results" MODIFIED="1542210360315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
-    <SUITE FILE_PATH="coverage/CRM$more_order_info_manager.coverage" NAME="more_order_info_manager Coverage Results" MODIFIED="1542918701629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$mainwindow__1_.coverage" NAME="mainwindow (1) Coverage Results" MODIFIED="1543520881564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$mainstyle.coverage" NAME="mainstyle Coverage Results" MODIFIED="1540739081490" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
-    <SUITE FILE_PATH="coverage/CRM$main.coverage" NAME="main Coverage Results" MODIFIED="1543700339285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
-    <SUITE FILE_PATH="coverage/CRM$snabzenecwindow.coverage" NAME="snabzenecwindow Coverage Results" MODIFIED="1543690458036" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$choosedate.coverage" NAME="choosedate Coverage Results" MODIFIED="1543560234540" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$dbtables.coverage" NAME="dbtables Coverage Results" MODIFIED="1543509812276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/CRM$view_model_window.coverage" NAME="view_model_window Coverage Results" MODIFIED="1542919854761" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
     <SUITE FILE_PATH="coverage/CRM$workerwindow.coverage" NAME="workerwindow Coverage Results" MODIFIED="1541697325264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
     <SUITE FILE_PATH="coverage/CRM$try.coverage" NAME="try Coverage Results" MODIFIED="1542629110342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/CRM$dbtables.coverage" NAME="dbtables Coverage Results" MODIFIED="1543509812276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/CRM$choosedate.coverage" NAME="choosedate Coverage Results" MODIFIED="1543560234540" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
     <SUITE FILE_PATH="coverage/CRM$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1540490594048" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$authorizationwindow.coverage" NAME="authorizationwindow Coverage Results" MODIFIED="1540534713733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$mainwindow__1_.coverage" NAME="mainwindow (1) Coverage Results" MODIFIED="1543520881564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$more_order_info_manager.coverage" NAME="more_order_info_manager Coverage Results" MODIFIED="1542918701629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$infowindow.coverage" NAME="infowindow Coverage Results" MODIFIED="1541680942310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
+    <SUITE FILE_PATH="coverage/CRM$orderinfo.coverage" NAME="orderinfo Coverage Results" MODIFIED="1540490633432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$managerwindow.coverage" NAME="managerwindow Coverage Results" MODIFIED="1542210360315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
+    <SUITE FILE_PATH="coverage/CRM$orderinfowindow.coverage" NAME="orderinfowindow Coverage Results" MODIFIED="1542658757366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$mainstyle.coverage" NAME="mainstyle Coverage Results" MODIFIED="1540739081490" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
+    <SUITE FILE_PATH="coverage/CRM$snabzenecwindow.coverage" NAME="snabzenecwindow Coverage Results" MODIFIED="1543690458036" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$db_module.coverage" NAME="db_module Coverage Results" MODIFIED="1543773851443" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/CRM$main.coverage" NAME="main Coverage Results" MODIFIED="1543775358429" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -43,59 +43,12 @@
     <expand />
     <select />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="1625638553">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="32" />
-          <entry key="project.open.time.1" value="2" />
-          <entry key="project.open.time.23" value="1" />
-          <entry key="project.open.time.24" value="1" />
-          <entry key="project.open.time.25" value="4" />
-          <entry key="project.open.time.26" value="5" />
-          <entry key="project.open.time.27" value="3" />
-          <entry key="project.open.time.28" value="4" />
-          <entry key="project.open.time.29" value="4" />
-          <entry key="project.open.time.31" value="2" />
-          <entry key="project.open.time.33" value="2" />
-          <entry key="project.open.time.34" value="1" />
-          <entry key="project.open.time.39" value="1" />
-          <entry key="project.open.time.59" value="1" />
-          <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="32" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="py" value="58" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Python" value="58" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="Python Console" value="1847" />
-          <entry key="dummy" value="252" />
-          <entry key="py" value="38531" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="PLAIN_TEXT" value="252" />
-          <entry key="Python" value="40378" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/interface/manager_window.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1125">
+            <state relative-caret-position="-655">
               <caret line="613" column="64" selection-start-line="613" selection-start-column="64" selection-end-line="613" selection-end-column="64" />
             </state>
           </provider>
@@ -104,18 +57,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="194" column="53" lean-forward="true" selection-start-line="194" selection-start-column="53" selection-end-line="194" selection-end-column="53" />
+            <state relative-caret-position="1295">
+              <caret line="322" column="39" lean-forward="true" selection-start-line="322" selection-start-column="39" selection-end-line="322" selection-end-column="39" />
               <folding>
                 <element signature="e#25#35#0" expanded="true" />
-                <marker date="1543700337885" expanded="true" signature="727:736" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="2321:2455" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="11436:11442" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="16686:22079" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="17647:17656" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="17647:18217" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="21559:22079" ph="..." />
-                <marker date="1543700337885" expanded="true" signature="21861:22079" ph="..." />
               </folding>
             </state>
           </provider>
@@ -125,7 +70,7 @@
         <entry file="file://$PROJECT_DIR$/interface/choosefile.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
-              <caret line="4" column="44" lean-forward="true" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
+              <caret line="4" column="44" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -133,7 +78,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/interface/infodelivery.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
+            <state relative-caret-position="943">
               <caret line="107" selection-start-line="107" selection-end-line="107" />
             </state>
           </provider>
@@ -142,30 +87,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data/db_module.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="746" selection-start-line="746" selection-start-column="2" selection-end-line="746" selection-end-column="36" />
+            <state relative-caret-position="512">
+              <caret line="518" column="12" lean-forward="true" selection-start-line="518" selection-start-column="12" selection-end-line="518" selection-end-column="12" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
-                <marker date="1543700592491" expanded="true" signature="177:178" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="177:182" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="671:1254" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="928:1033" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="1275:1908" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="1927:2724" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="2747:2752" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="3316:3321" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="5376:5381" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="5931:6450" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="8901:9471" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="10162:10735" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="10755:10760" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="11555:12172" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="12202:12207" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="12852:13333" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="13359:13364" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="14175:14180" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="14859:14872" ph="..." />
-                <marker date="1543700592491" expanded="true" signature="29150:29185" ph="..." />
               </folding>
             </state>
           </provider>
@@ -238,27 +163,21 @@
         <option value="$PROJECT_DIR$/interface/mainwindow.py" />
         <option value="$PROJECT_DIR$/data/mainwindow.py" />
         <option value="$PROJECT_DIR$/interface/moreorderinfo.py" />
-        <option value="D:/hash_pass.py" />
+        <option value="$PROJECT_DIR$/../hash_pass.py" />
         <option value="$PROJECT_DIR$/model/try.py" />
         <option value="$PROJECT_DIR$/interface/more_order_info_manager.py" />
-        <option value="$PROJECT_DIR$/interface/view_model_window.py" />
         <option value="$PROJECT_DIR$/interface/choosedate.py" />
         <option value="$PROJECT_DIR$/interface/choosefile.py" />
         <option value="$PROJECT_DIR$/interface/infodelivery.py" />
         <option value="$PROJECT_DIR$/interface/snabzenecwindow.py" />
         <option value="$PROJECT_DIR$/interface/manager_window.py" />
+        <option value="$PROJECT_DIR$/interface/view_model_window.py" />
         <option value="$PROJECT_DIR$/data/main.py" />
         <option value="$PROJECT_DIR$/data/db_module.py" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1382" />
@@ -269,6 +188,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -289,7 +209,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -458,8 +377,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540032974867</updated>
+      <workItem from="1543769032219" duration="7889000" />
     </task>
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="7889000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -471,15 +394,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17019667" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17217484" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.3295082" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.3286334" />
-      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.49924356" weight="0.35081968" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.49924356" weight="0.34994584" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.39836067" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -488,8 +412,8 @@
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50075644" side_tool="true" weight="0.352459" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.35737705" />
-      <window_info anchor="bottom" id="Python Console" order="13" weight="0.3295082" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" visible="true" weight="0.3564464" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -500,42 +424,15 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/1/py1.py" />
-    <entry file="file://D:/Проект 2020/Interface101v1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../Проект 2020/Interface101v1.py" />
     <entry file="file://$PROJECT_DIR$/interface/__init__.py" />
     <entry file="file://$PROJECT_DIR$/interface/windows_style/__init__.py" />
     <entry file="file://$PROJECT_DIR$/interface/windows_style/mainstyle.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/pymysql/cursors.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="169" selection-start-line="169" selection-end-line="169" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Интерфейс/workerwindow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="262" lean-forward="true" selection-start-line="262" selection-end-line="262" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Интерфейс/infowindow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="63" column="67" lean-forward="true" selection-start-line="63" selection-start-column="67" selection-end-line="63" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/pymysql/cursors.py" />
+    <entry file="file://$PROJECT_DIR$/../Интерфейс/workerwindow.py" />
+    <entry file="file://$PROJECT_DIR$/../Интерфейс/infowindow.py" />
     <entry file="file://$PROJECT_DIR$/interface/modification_window.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -551,13 +448,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/hash_pass.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="30" column="19" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../hash_pass.py" />
     <entry file="file://$PROJECT_DIR$/interface/authorization_window.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="313">
@@ -565,27 +456,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/pymysql/cursors.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/pymysql/cursors.py" />
     <entry file="file://$PROJECT_DIR$/model/try.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
           <caret line="57" selection-start-line="57" selection-end-line="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/interface/view_model_window.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="21" column="25" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -617,71 +492,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/interface/choosefile.py">
+    <entry file="file://$PROJECT_DIR$/interface/view_model_window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="44" lean-forward="true" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/interface/infodelivery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="194" column="53" lean-forward="true" selection-start-line="194" selection-start-column="53" selection-end-line="194" selection-end-column="53" />
+        <state relative-caret-position="374">
+          <caret line="22" column="40" lean-forward="true" selection-start-line="22" selection-start-column="40" selection-end-line="22" selection-end-column="40" />
           <folding>
-            <element signature="e#25#35#0" expanded="true" />
-            <marker date="1543700337885" expanded="true" signature="727:736" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="2321:2455" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="11436:11442" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="16686:22079" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="17647:17656" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="17647:18217" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="21559:22079" ph="..." />
-            <marker date="1543700337885" expanded="true" signature="21861:22079" ph="..." />
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/interface/manager_window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1125">
+        <state relative-caret-position="-655">
           <caret line="613" column="64" selection-start-line="613" selection-start-column="64" selection-end-line="613" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/choosefile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="44" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/infodelivery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="943">
+          <caret line="107" selection-start-line="107" selection-end-line="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1295">
+          <caret line="322" column="39" lean-forward="true" selection-start-line="322" selection-start-column="39" selection-end-line="322" selection-end-column="39" />
+          <folding>
+            <element signature="e#25#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/db_module.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="746" selection-start-line="746" selection-start-column="2" selection-end-line="746" selection-end-column="36" />
+        <state relative-caret-position="512">
+          <caret line="518" column="12" lean-forward="true" selection-start-line="518" selection-start-column="12" selection-end-line="518" selection-end-column="12" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
-            <marker date="1543700592491" expanded="true" signature="177:178" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="177:182" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="671:1254" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="928:1033" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="1275:1908" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="1927:2724" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="2747:2752" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="3316:3321" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="5376:5381" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="5931:6450" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="8901:9471" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="10162:10735" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="10755:10760" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="11555:12172" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="12202:12207" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="12852:13333" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="13359:13364" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="14175:14180" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="14859:14872" ph="..." />
-            <marker date="1543700592491" expanded="true" signature="29150:29185" ph="..." />
           </folding>
         </state>
       </provider>

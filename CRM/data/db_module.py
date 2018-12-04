@@ -1,6 +1,7 @@
 import sqlalchemy as alc
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
+import datetime
 from datetime import date
 
 
@@ -414,7 +415,7 @@ class StoreMaterial(Base):
 
 # Поиск работника по его логину и паролю
 def search_employee(login, passwd):
-    engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+    engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
     Session = alc.orm.sessionmaker(engine)
     session = Session()
     Base.metadata.create_all(engine)
@@ -425,7 +426,7 @@ def search_employee(login, passwd):
 # Класс для взаимодействия с бд для менеджера
 class ManagerConnection:
     def __init__(self, manager_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.manager_id = manager_id
@@ -588,8 +589,35 @@ class ManagerConnection:
     def update_order_info(self, values):
         session = self.Session()
         try:
+
+            ########################################################################################################
+
+            rec = session.query(Client.surname, Client.name, Client.patronymic, Client.telephone_number,
+                                Client.email, Model3D.model_file, Material.type, Material.color, ExtraInformation.info,
+                                Order.short_description, Order.price).join(Order).filter_by(order_number=int(values[0])).\
+                                join(ExtraInformation).join(Material).join(Model3D).first()
+
+            fields_names = ["Фамилия", "Имя", "Отчество", "Телефонный номер", "Электронная почта", "Файл модели", "Тип",
+                          "Цвет", "Дополнителная информация", "Краткая информация", "Цена"]
+
+            tabl = ''
+
+            for i in range(len(rec)):
+                if str(rec[i]) != str(values[i+1]):
+                    tabl = tabl + fields_names[i] + ': ' + str(rec[i]) + ' -> ' + str(values[i+1]) + '\n'
+
+            print(tabl)
+            session.add(Changes(values[0], datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), tabl))
+
+            ########################################################################################################
+
             order = session.query(Order).filter_by(order_number=int(values[0])).one()
 
+            session.query(Client).filter_by(client_id=order.client_id).update({Client.surname: values[1],
+                                                                               Client.name: values[2],
+                                                                               Client.patronymic: values[3],
+                                                                               Client.telephone_number: values[4],
+                                                                               Client.email: values[5]})
             session.query(Model3D).filter_by(model_id=order.model_id).update({Model3D.model_file: values[6]})
             session.query(Order).filter_by(order_number=order.order_number).\
                 update({Order.short_description: values[10], Order.price: values[11]})
@@ -611,6 +639,8 @@ class ManagerConnection:
             order.status = 2
 
             session.commit()
+        except Exception as e:
+            print(e)
         finally:
             session.close()
 
@@ -655,91 +685,91 @@ class ManagerConnection:
 
 
 # Класс для взаимодействия с бд для работника
-# class WorkerConnection:
-#     def __init__(self, worker_id):
-#         self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
-#         self.Session = alc.orm.sessionmaker(self.engine)
-#         Base.metadata.create_all(self.engine)
-#         self.worker_id = worker_id
-#
-#     # Получение информации о текущих заказах работника
-#     def get_orders_info(self):
-#         session = self.Session()
-#         try:
-#             orders = []
-#             for record in session.query(Order, Statuses).join(Statuses).filter(Order.status.in_((2, 3, 5))).\
-#                     join(OrderEmployee).filter_by(employee_id=self.worker_id):
-#                 orders.append([record.Order.order_number, 0, record.Statuses.status_name])
-#             requests_dates = dict()
-#             # Получение информации о датах поступления материалов
-#             for record in session.query(Request):
-#                 requests_dates[record.order_number] = record.end_date
-#             # Заполнение информации о датах поступления материалов
-#             for order in orders:
-#                 if order[0] in requests_dates.keys():
-#                     order[1] = requests_dates[order[0]]
-#             return orders
-#         finally:
-#             session.close()
-#
-#     # Получение расширенной информации о заказе
-#     def get_more_order_info(self, order_number):
-#         session = self.Session()
-#         try:
-#             # Если есть расширенная информация о заказе, она добавляется в список
-#             if len(session.query(ExtraInformation).filter_by(order_number=order_number).all()) != 0:
-#                 for record in session.query(Order, Material, Model3D, ExtraInformation).\
-#                         filter_by(order_number=order_number).join(ExtraInformation).join(OrderMaterial).join(Material):
-#                     return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
-#                             record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
-#             for record in session.query(Order, Material, Model3D).\
-#                     filter_by(order_number=order_number).join(OrderMaterial).join(Material):
-#                 return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
-#                         record.Model3D.model_file, record.Order.short_description]
-#         finally:
-#             session.close()
-#
-#     # Получение информации о новых заказах работника
-#     def get_new_orders(self):
-#         session = self.Session()
-#         try:
-#             new_orders = []
-#             for record in session.query(Order, Model3D, Material).filter_by(status=1).join(OrderEmployee).\
-#                     filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(OrderMaterial).join(Material):
-#                 new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
-#                                    record.Material.type + ' ' + record.Material.color])
-#             return new_orders
-#         finally:
-#             session.close()
-#
-#     # Приём работником заказа
-#     def take_order(self, order_number):
-#         session = self.Session()
-#         try:
-#             session.query(Order).filter_by(order_number=order_number).update({'status': 2})
-#             session.commit()
-#         finally:
-#             session.close()
-#
-#     # Отправка заказа на доработку
-#     def send_order_to_modify(self, order_number, mark):
-#         session = self.Session()
-#         try:
-#             session.query(Order).filter_by(order_number=order_number).update({'status': 4})
-#             session.add(OrderModification(order_number, mark))
-#             session.commit()
-#         finally:
-#             session.close()
-#
-#     # Завершение заказа
-#     def complete_order(self, order_number):
-#         session = self.Session()
-#         try:
-#             session.query(Order).filter_by(order_number=order_number).update({'status': 6})
-#             session.commit()
-#         finally:
-#             session.close()
+class WorkerConnection:
+    def __init__(self, worker_id):
+         self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+         self.Session = alc.orm.sessionmaker(self.engine)
+         Base.metadata.create_all(self.engine)
+         self.worker_id = worker_id
 
+    # Получение информации о текущих заказах работника
+    def get_orders_info(self):
+        session = self.Session()
+        try:
+            orders = []
+            for record in session.query(Order, Statuses).join(Statuses).filter(Order.status.in_((2, 3, 5))).\
+                    join(OrderEmployee).filter_by(employee_id=self.worker_id):
+                orders.append([record.Order.order_number, 0, record.Statuses.status_name])
+            requests_dates = dict()
+            # Получение информации о датах поступления материалов
+            for record in session.query(Request):
+                requests_dates[record.order_number] = record.end_date
+            # Заполнение информации о датах поступления материалов
+            for order in orders:
+                if order[0] in requests_dates.keys():
+                    order[1] = requests_dates[order[0]]
+            return orders
+        finally:
+            session.close()
+
+    # Получение расширенной информации о заказе
+    def get_more_order_info(self, order_number):
+         session = self.Session()
+         try:
+             # Если есть расширенная информация о заказе, она добавляется в список
+             if len(session.query(ExtraInformation).filter_by(order_number=order_number).all()) != 0:
+                record = session.query(Order, Material, Model3D, ExtraInformation). \
+                 filter_by(order_number=order_number).join(Material).join(ExtraInformation).first()
+                return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
+                   record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
+
+             record = session.query(Order, Material, Model3D). \
+                 filter_by(order_number=order_number).join(Material).first()
+             return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
+                         record.Model3D.model_file, record.Order.short_description]
+         finally:
+             session.close()
+
+     # Получение информации о новых заказах работника
+    def get_new_orders(self):
+         session = self.Session()
+         try:
+             new_orders = []
+             for record in session.query(Order, Model3D, Material).filter_by(status=1).join(OrderEmployee).\
+                     filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(Material):
+                 new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
+                                    record.Material.type + ' ' + record.Material.color])
+             return new_orders
+         finally:
+             session.close()
+
+     # Приём работником заказа
+    def take_order(self, order_number):
+         session = self.Session()
+         try:
+             session.query(Order).filter_by(order_number=order_number).update({'status': 2})
+             session.commit()
+         finally:
+             session.close()
+
+     # Отправка заказа на доработку
+    def send_order_to_modify(self, order_number, mark):
+         session = self.Session()
+         try:
+             session.query(Order).filter_by(order_number=order_number).update({'status': 4})
+             session.add(OrderModification(order_number, mark))
+             session.commit()
+         finally:
+             session.close()
+
+     # Завершение заказа
+    def complete_order(self, order_number):
+         session = self.Session()
+         try:
+             session.query(Order).filter_by(order_number=order_number).update({'status': 6})
+             session.commit()
+         finally:
+             session.close()
 
 # engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
 # Session = alc.orm.sessionmaker(engine)
@@ -759,3 +789,75 @@ class ManagerConnection:
 #                                {'type': 'ABS пластик', 'colors': ['Зелёный']}, '', 'Распечатать зелёное ведёрко', '0.00'])
 # print(manager_con.get_needed_modification_order_info(1), sep='\n')
 # print(manager_con.get_needed_modification_order_info(5))
+'''
+engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+Session = alc.orm.sessionmaker(engine)
+session = Session()
+#for record in session.query(Order, Model3D, Material).filter_by(status=2).join(OrderEmployee).\
+#                     filter_by(employee_id=3).join(Statuses).join(Model3D).join(Material):
+#                 print(record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
+#                                       record.Material.type + ' ' + record.Material.color)
+rec = session.query(Order).filter_by(order_number=4).first()
+order_1 = [rec.status, rec.order_number, rec.price, rec.client_id, rec.model_id, rec.short_description, rec.date,
+           rec.end_date, rec.material_id]
+rec = session.query(Model3D).filter_by(model_id=3).first()
+model_3d_1 = [rec.model_id, rec.model_file]
+rec = session.query(Material).filter_by(material_id=9).first()
+material_1 = [rec.material_id, rec.color, rec.type]
+rec = session.query(Client).filter_by(client_id=2).first()
+client_1 = [rec.surname, rec.name, rec.patronymic, rec.telephone_number, rec.email, rec.client_id]
+#
+rec = session.query(Order).filter_by(order_number=1).first()
+order_2 = [rec.status, rec.order_number, rec.price, rec.client_id, rec.model_id, rec.short_description, rec.date,
+           rec.end_date, rec.material_id]
+
+rec = session.query(Model3D).filter_by(model_id=1).first()
+model_3d_2 = [rec.model_id, rec.model_file]
+
+rec = session.query(Material).filter_by(material_id=9).first()
+material_2 = [rec.material_id, rec.color, rec.type]
+
+rec = session.query(Client).filter_by(client_id=1).first()
+client_2 = [rec.surname, rec.name, rec.patronymic, rec.telephone_number, rec.email, rec.client_id]
+#
+
+print(order_1)
+print(model_3d_1)
+print(material_1)
+print(client_1)
+print(order_2)
+print(model_3d_2)
+print(material_2)
+print(client_2)
+
+order_str = ["Статус", "Номер заказа", "Цена", "ID_Клиента", "ID_Модели", "Краткая информация", "Дата поступления",
+             "Дата завершения", "ID_Материала"]
+model_3d_str = ["ID_Модели", "Файл модели"]
+material_str = ["ID_Материала", "Цвет", "Тип"]
+client_str = ["Фамилия", "Имя", "Отчество", "Телефонный номер", "Электронная почта"]
+
+j = 0
+tabl = ''
+for i in order_1:
+    if i != order_2[j]:
+        tabl = tabl + order_str[j] + ': ' + str(i) + ' -> ' + str(order_2[j]) + '\n'
+    j += 1
+j = 0
+for i in model_3d_1:
+    if (i != model_3d_2[j]) and (j != 0):
+        tabl = tabl + model_3d_str[j] + ': ' + str(i) + ' -> ' + str(model_3d_2[j]) + '\n'
+    j += 1
+j = 0
+for i in material_1:
+    if (i != material_2[j]) and (j != 0):
+        tabl = tabl + material_str[j] + ': ' + str(i) + ' -> ' + str(material_2[j]) + '\n'
+    j += 1
+j = 0
+for i in client_1:
+    if (i != client_2[j]) and (j != 5):
+        tabl = tabl + client_str[j] + ': ' + str(i) + ' -> ' + str(client_2[j]) + '\n'
+    j += 1
+print(tabl)
+
+time = str(datetime.datetime.now())
+print(time[:19])'''

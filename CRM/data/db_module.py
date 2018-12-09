@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sqlalchemy as alc
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
@@ -362,23 +364,6 @@ class RequestEmployee(Base):
         return 'RequestEmployee(' + res_str + ')'
 
 
-class RequestMaterial(Base):
-    __tablename__ = "request_material"
-    material_id = alc.Column(alc.Integer, alc.ForeignKey('amount_of_material.material_id'), primary_key=True)
-    request_number = alc.Column(alc.Integer, alc.ForeignKey('request.request_number'), primary_key=True)
-
-    def __init__(self, material_id, request_number):
-        self.material_id = material_id
-        self.request_number = request_number
-
-    def __repr__(self):
-        res_str = str()
-        for key, value in self.__dict__.items():
-            if key[0] != '_':
-                res_str += "{}: {} ".format(key, value)
-        return 'RequestMaterial(' + res_str + ')'
-
-
 class Statuses(Base):
     __tablename__ = "statuses"
     status_id = alc.Column(alc.Integer, primary_key=True)
@@ -415,7 +400,7 @@ class StoreMaterial(Base):
 
 # Поиск работника по его логину и паролю
 def search_employee(login, passwd):
-    engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+    engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
     Session = alc.orm.sessionmaker(engine)
     session = Session()
     Base.metadata.create_all(engine)
@@ -426,7 +411,7 @@ def search_employee(login, passwd):
 # Класс для взаимодействия с бд для менеджера
 class ManagerConnection:
     def __init__(self, manager_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.manager_id = manager_id
@@ -598,7 +583,7 @@ class ManagerConnection:
                                 join(ExtraInformation).join(Material).join(Model3D).first()
 
             fields_names = ["Фамилия", "Имя", "Отчество", "Телефонный номер", "Электронная почта", "Файл модели", "Тип",
-                          "Цвет", "Дополнителная информация", "Краткая информация", "Цена"]
+                            "Цвет", "Дополнителная информация", "Краткая информация", "Цена"]
 
             tabl = ''
 
@@ -687,10 +672,10 @@ class ManagerConnection:
 # Класс для взаимодействия с бд для работника
 class WorkerConnection:
     def __init__(self, worker_id):
-         self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
-         self.Session = alc.orm.sessionmaker(self.engine)
-         Base.metadata.create_all(self.engine)
-         self.worker_id = worker_id
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.Session = alc.orm.sessionmaker(self.engine)
+        Base.metadata.create_all(self.engine)
+        self.worker_id = worker_id
 
     # Получение информации о текущих заказах работника
     def get_orders_info(self):
@@ -714,62 +699,62 @@ class WorkerConnection:
 
     # Получение расширенной информации о заказе
     def get_more_order_info(self, order_number):
-         session = self.Session()
-         try:
-             # Если есть расширенная информация о заказе, она добавляется в список
-             if len(session.query(ExtraInformation).filter_by(order_number=order_number).all()) != 0:
-                record = session.query(Order, Material, Model3D, ExtraInformation). \
-                 filter_by(order_number=order_number).join(Material).join(ExtraInformation).first()
+        session = self.Session()
+        try:
+            # Если есть расширенная информация о заказе, она добавляется в список
+            if len(session.query(ExtraInformation).filter_by(order_number=order_number).all()) != 0:
+                record = session.query(Order, Material, Model3D, ExtraInformation).\
+                         filter_by(order_number=order_number).join(Material).join(ExtraInformation).first()
                 return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
-                   record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
+                        record.Model3D.model_file, record.Order.short_description, record.ExtraInformation.info]
 
-             record = session.query(Order, Material, Model3D). \
-                 filter_by(order_number=order_number).join(Material).first()
-             return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
-                         record.Model3D.model_file, record.Order.short_description]
-         finally:
-             session.close()
+            record = session.query(Order, Material, Model3D).\
+                filter_by(order_number=order_number).join(Material).first()
+            return [record.Order.order_number, record.Material.type + ' ' + record.Material.color,
+                    record.Model3D.model_file, record.Order.short_description]
+        finally:
+            session.close()
 
-     # Получение информации о новых заказах работника
+    # Получение информации о новых заказах работника
     def get_new_orders(self):
-         session = self.Session()
-         try:
-             new_orders = []
-             for record in session.query(Order, Model3D, Material).filter_by(status=1).join(OrderEmployee).\
-                     filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(Material):
-                 new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
-                                    record.Material.type + ' ' + record.Material.color])
-             return new_orders
-         finally:
-             session.close()
+        session = self.Session()
+        try:
+            new_orders = []
+            for record in session.query(Order, Model3D, Material).filter_by(status=1).join(OrderEmployee).\
+                    filter_by(employee_id=self.worker_id).join(Statuses).join(Model3D).join(Material):
+                new_orders.append([record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
+                                   record.Material.type + ' ' + record.Material.color])
+            return new_orders
+        finally:
+            session.close()
 
-     # Приём работником заказа
+    # Приём работником заказа
     def take_order(self, order_number):
-         session = self.Session()
-         try:
-             session.query(Order).filter_by(order_number=order_number).update({'status': 2})
-             session.commit()
-         finally:
-             session.close()
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({'status': 2})
+            session.commit()
+        finally:
+            session.close()
 
-     # Отправка заказа на доработку
+    # Отправка заказа на доработку
     def send_order_to_modify(self, order_number, mark):
-         session = self.Session()
-         try:
-             session.query(Order).filter_by(order_number=order_number).update({'status': 4})
-             session.add(OrderModification(order_number, mark))
-             session.commit()
-         finally:
-             session.close()
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({'status': 4})
+            session.add(OrderModification(order_number, mark))
+            session.commit()
+        finally:
+            session.close()
 
-     # Завершение заказа
+    # Завершение заказа
     def complete_order(self, order_number):
-         session = self.Session()
-         try:
-             session.query(Order).filter_by(order_number=order_number).update({'status': 6})
-             session.commit()
-         finally:
-             session.close()
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({'status': 6})
+            session.commit()
+        finally:
+            session.close()
 
 # engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
 # Session = alc.orm.sessionmaker(engine)

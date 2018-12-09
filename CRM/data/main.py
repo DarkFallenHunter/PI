@@ -11,6 +11,7 @@ from interface.more_order_info_worker import UiMoreOrderInfoWorker
 from interface.modification_window import UiModificationWindow
 from interface.view_model_window import UiViewModelWindow
 from PyQt5 import QtWidgets, QtCore, QtGui
+from data.pySlice import calc_length_stl_material
 
 
 # Окно для отображения ошибок
@@ -148,7 +149,7 @@ class ManagerMainWindow(UiManagerWindow):
 
     # Выбор файла для нового или дорабатываемого заказа
     def select_file(self, ref):
-        # Если выбирается файл для текущего заказа
+        # Если выбирается файл для нового заказа
         if not ref:
             if self.file_with_model_radio.isChecked():
                 file_filter = '*.stl'
@@ -160,6 +161,9 @@ class ManagerMainWindow(UiManagerWindow):
                                                       )[0].split('/')[-1]
             if self.create_filename != '':
                 self.selected_file_label.setText(self.create_filename)
+                if self.create_filename.split('.')[-1] == 'stl' and self.type_of_plastic_combobox.currentText() != '':
+                    self.finale_price_label.setText(str(calc_length_stl_material(self.create_filename)) + ' рублей')
+
         # Если выбирается файл для дорабатываемого заказа
         else:
             if self.file_with_model_radio_ref.isChecked():
@@ -170,6 +174,11 @@ class ManagerMainWindow(UiManagerWindow):
                                                                            'Select File', 'C:\\', file_filter)[0]
             if self.refactor_filename != '':
                 self.selected_file_label_ref.setText(self.refactor_filename.split('/')[-1])
+                if self.refactor_filename.split('.')[-1] == 'stl' \
+                        and self.type_of_plastic_combobox_ref.currentText() != '':
+                    self.finale_price_label_ref.setText(
+                        str(calc_length_stl_material(self.refactor_filename)) + ' рублей'
+                    )
 
     # Функция для заполнения combobox'ов
     def fill_combobox(self, combobox, values):
@@ -191,8 +200,7 @@ class ManagerMainWindow(UiManagerWindow):
             list_of_colors = self.db_connection.get_colors_of_plastic(self.type_of_plastic_combobox.currentText())
 
         widget_list.clear()
-        for color in list_of_colors:
-            widget_list.addItem(color)
+        self.fill_combobox(widget_list, list_of_colors)
 
     def clear_all_fields(self, ref):
         if not ref:

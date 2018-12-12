@@ -53,7 +53,7 @@ class UiChooseDate(object):
 "border-radius: 6px;\n"
 "")
         self.confirm_button.setObjectName("confirm_button")
-        self.textEdit = QtWidgets.QTextEdit(choose_date)
+        self.textEdit = QtWidgets.QLineEdit(choose_date)
         self.textEdit.setGeometry(QtCore.QRect(60, 70, 211, 24))
         self.textEdit.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.textEdit.setObjectName("textEdit")

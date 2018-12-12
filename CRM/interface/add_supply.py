@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_AddSupply(object):
+class UiAddSupply(object):
     def setupUi(self, AddSupply):
         AddSupply.setObjectName("AddSupply")
         AddSupply.resize(484, 450)
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     AddSupply = QtWidgets.QWidget()
-    ui = Ui_AddSupply()
+    ui = UiAddSupply()
     ui.setupUi(AddSupply)
     AddSupply.show()
     sys.exit(app.exec_())

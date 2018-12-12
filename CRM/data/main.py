@@ -9,7 +9,11 @@ from interface.more_order_info_manager import UiMoreOrderInfoManager
 from interface.worker_window import UiWorkerWindow
 from interface.more_order_info_worker import UiMoreOrderInfoWorker
 from interface.modification_window import UiModificationWindow
+from interface.snabzenecwindow import UiSnabzenecWindow
 from interface.view_model_window import UiViewModelWindow
+from interface.choosedate import UiChooseDate
+from interface.add_supply import UiAddSupply
+from interface.infodelivery import UiInfoDelivery
 from PyQt5 import QtWidgets, QtCore, QtGui
 from data.pySlice import calc_length_stl_material
 
@@ -73,6 +77,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.ui.setupUi(self)
                 self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
                 self.ui.reinit()
+            elif employee_info[0] == 3:
+                self.ui = SupplierMainWindow(employee_info[1])
+                self.ui.setupUi(self)
+                self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
+                self.ui.reinit()
             else:
                 print("!")
         except Exception as e:
@@ -83,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
 class ManagerMainWindow(UiManagerWindow):
     def __init__(self, manager_id):
         super().__init__()
+        self.manager_id = manager_id
         # Окно для отобрадения дополнительной информации о заказе
         self.order_info = OrderInfoManagerWindow()
         # self.order_info.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -90,7 +100,6 @@ class ManagerMainWindow(UiManagerWindow):
         self.refactor_filename = ''
         # Переменная для хранения пути к файлу нового заказа
         self.create_filename = ''
-        self.manager_id = manager_id
         self.db_connection = db.ManagerConnection(manager_id)
         # Окно для отображения ошибки при попытке отобразить информацию без выбора заказа
         self.show_info_error_window = ErrorWindow('Выберите необходимый заказ!', 'Ошибка')
@@ -468,7 +477,6 @@ class WorkerMainWindow(UiWorkerWindow):
         else:
             self.select_order_error_window.show()
 
-
 # Окно для отображения информации о заказе
 class OrderInfoWorkerWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -485,6 +493,135 @@ class ModificationWindow(QtWidgets.QWidget):
         self.ui = UiModificationWindow()
         self.ui.setupUi(self)
         self.ui.cancel_button.clicked.connect(self.close)
+
+
+# Окно для снабженца
+class SupplierMainWindow(UiSnabzenecWindow):
+    def __init__(self, supplier_id):
+        super().__init__()
+        self.supplier_id = supplier_id
+        # Окно для сообщения о дате поставки
+        self.choose_date_window = ChooseDateWindow()
+        self.choose_date_window.setWindowModality(QtCore.Qt.ApplicationModal)
+        # Окно для добавления новой поставки
+        self.add_supply_window = AddSupplyWindow()
+        self.add_supply_window.setWindowModality(QtCore.Qt.ApplicationModal)
+        # Окно для просмотра информации о поставке
+        self.info_delivery_window = InfoDeliveryWindow()
+        self.info_delivery_window.setWindowModality(QtCore.Qt.ApplicationModal)
+
+        self.db_connection = db.SupplierConnection(self.supplier_id)
+
+    def reinit(self):
+        self.fill_table(self.db_connection.get_store_info(), self.info_table)
+        self.fill_table(self.db_connection.get_application_info(), self.application_info_table)
+        self.fill_table(self.db_connection.get_supply_info(), self.supply_info_table)
+        self.add_supply_button.clicked.connect(self.show_new_supply)
+        self.information_delivery_button.clicked.connect(self.show_information_delivery)
+        self.date_button.clicked.connect(self.show_date)
+        self.send_material_button.clicked.connect(self.send_material)
+        self.cancel_supply_button.clicked.connect(self.cancel_supply)
+        self.confirm_delivery_button.clicked.connect(self.confirm_delivery)
+        self.choose_date_window.ui.confirm_button.clicked.connect(self.update_end_date)
+
+    # Функция для закполнения таблиц
+    def fill_table(self, records, table):
+        while table.rowCount() > 0:
+            table.removeRow(0)
+        for record in records:
+            row_index = table.rowCount()
+            table.insertRow(row_index)
+            for column_index, item in enumerate(record):
+                table_item = QtWidgets.QTableWidgetItem(str(item))
+                table_item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)
+                table_item.setTextAlignment(QtCore.Qt.AlignCenter)
+                table.setItem(row_index, column_index, table_item)
+
+    # Отображение окна для добавления заказа
+    def show_new_supply(self):
+        ...
+
+    # Отображение дополнительной информации о поставке
+    def show_information_delivery(self):
+        if self.supply_info_table.currentItem() is not None:
+            if self.supply_info_table.currentColumn() != 0:
+                self.supply_info_table.setCurrentCell(self.supply_info_table.currentRow(), 0)
+
+            delivery_number = self.supply_info_table.currentItem().text()
+            self.supply_info_table.setCurrentCell(-1, -1)
+
+            for index, item in enumerate(self.db_connection.get_more_supply_info(delivery_number)):
+                table_item = QtWidgets.QTableWidgetItem(str(item))
+                table_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                self.info_delivery_window.ui.info_table.setItem(index, 0, table_item)
+
+            self.info_delivery_window.show()
+        else:
+            ...#self.select_order_error_window.show()
+
+    # Отображение окна для добавления даты доставке
+    def show_date(self):
+        if self.application_info_table.currentItem() is not None:
+            if self.application_info_table.currentColumn() != 0:
+                self.application_info_table.setCurrentCell(self.application_info_table.currentRow(), 0)
+
+            number = self.application_info_table.currentItem().text()
+            self.application_info_table.setCurrentCell(-1, -1)
+            self.choose_date_window.request_number = number[0]
+            self.choose_date_window.ui.textEdit.setText(str(self.db_connection.get_end_data_application_info(number)))
+
+            self.choose_date_window.show()
+        else:
+            ...#self.select_order_error_window.show()
+
+    # Обновление даты поставки
+    def update_end_date(self):
+        print(3)
+        if self.choose_date_window.ui.textEdit.text() != '':
+            print(2)
+            self.db_connection.update_end_date_bd(self.choose_date_window.request_number, str(self.choose_date_window.ui.textEdit.text()))
+            self.fill_table(self.db_connection.get_application_info(), self.application_info_table)
+            self.choose_date_window.close()
+
+
+    # Отправить материалы
+    def send_material(self):
+        ...
+
+    # Отмена поставки
+    def cancel_supply(self):
+        ...
+
+    # Подтвердить доставку материалов
+    def confirm_delivery(self):
+        ...
+
+# Окно для сообщения о дате поставки
+class ChooseDateWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.ui = UiChooseDate()
+        self.ui.setupUi(self)
+        self.ui.cancel_button.clicked.connect(self.close)
+        self.request_number = str()
+
+# Окно для просмотра информации о поставке
+class InfoDeliveryWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.ui = UiInfoDelivery()
+        self.ui.setupUi(self)
+        self.ui.close_button.clicked.connect(self.close)
+
+# Окно для добавления новой поставки
+class AddSupplyWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.ui = UiAddSupply()
+        self.ui.setupUi(self)
+        self.ui.cancel_button.clicked.connect(self.close)
+
+
 
 
 if __name__ == "__main__":

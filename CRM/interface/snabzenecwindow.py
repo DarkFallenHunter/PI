@@ -8,10 +8,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_SnabzenecWindow(object):
+class UiSnabzenecWindow(object):
     def setupUi(self, SnabzenecWindow):
         SnabzenecWindow.setObjectName("SnabzenecWindow")
         SnabzenecWindow.resize(800, 680)
+        SnabzenecWindow.setMinimumSize(800, 680)
+        SnabzenecWindow.setMaximumSize(800, 680)
         SnabzenecWindow.setStyleSheet("background-color: rgb(0, 51, 102);")
         self.centralwidget = QtWidgets.QWidget(SnabzenecWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -442,7 +444,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     SnabzenecWindow = QtWidgets.QMainWindow()
-    ui = Ui_SnabzenecWindow()
+    ui = UiSnabzenecWindow()
     ui.setupUi(SnabzenecWindow)
     SnabzenecWindow.show()
     sys.exit(app.exec_())

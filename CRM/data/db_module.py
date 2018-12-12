@@ -4,6 +4,7 @@ import sqlalchemy as alc
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 import datetime
+from sqlalchemy.event import listen
 from datetime import date
 
 
@@ -92,12 +93,22 @@ class Client(Base):
 
 class Delivery(Base):
     __tablename__ = "delivery"
-    supplier_id = alc.Column(alc.Integer, alc.ForeignKey('employee.employee_id'), primary_key=True)
-    contract_number = alc.Column(alc.Integer)
+    supplier_id = alc.Column(alc.Integer, alc.ForeignKey('employee.employee_id'))
+    contract_number = alc.Column(alc.Integer, primary_key=True)
+    material_id = alc.Column(alc.Integer)
+    amount = alc.Column(alc.Integer)
+    status = alc.Column(alc.Integer, alc.ForeignKey('delivery_statuses.statuses_id'))
+    start_delivery = alc.Column(alc.DateTime)
+    end_delivery = alc.Column(alc.DateTime)
 
-    def __init__(self, supplier_id, contract_number):
+    def __init__(self, supplier_id, contract_number, material_id, amount, status, start_delivery, end_delivery):
         self.supplier_id = supplier_id
         self.contract_number = contract_number
+        self.material_id = material_id
+        self.amount = amount
+        self.status = status
+        self.start_delivery = start_delivery
+        self.end_delivery = end_delivery
 
     def __repr__(self):
         res_str = str()
@@ -105,6 +116,23 @@ class Delivery(Base):
             if key[0] != '_':
                 res_str += "{}: {} ".format(key, value)
         return 'Delivery(' + res_str + ')'
+
+
+class DeliveryStatuses(Base):
+    __tablename__ = "delivery_statuses"
+    statuses_id = alc.Column(alc.Integer, primary_key=True)
+    status_name = alc.Column(alc.String)
+
+    def __init__(self, statuses_id, status_name):
+        self.statuses_id = statuses_id
+        self.status_name = status_name
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'DeliveryStatuses(' + res_str + ')'
 
 
 class Employee(Base):
@@ -128,23 +156,6 @@ class Employee(Base):
             if key[0] != '_':
                 res_str += "{}: {} ".format(key, value)
         return 'Employee(' + res_str + ')'
-
-
-class ExtraInformation(Base):
-    __tablename__ = "extra_information"
-    order_number = alc.Column(alc.Integer, alc.ForeignKey('order.order_number'), primary_key=True)
-    info = alc.Column(alc.String)
-
-    def __init__(self, order_number, info):
-        self.order_number = order_number
-        self.info = info
-
-    def __repr__(self):
-        res_str = str()
-        for key, value in self.__dict__.items():
-            if key[0] != '_':
-                res_str += "{}: {} ".format(key, value)
-        return 'ExtraInformation(' + res_str + ')'
 
 
 class InformationAboutMaterial(Base):
@@ -234,6 +245,23 @@ class Order(Base):
             if key[0] != '_':
                 res_str += "{}: {} ".format(key, value)
         return 'Order(' + res_str + ')'
+
+
+class ExtraInformation(Base):
+    __tablename__ = "extra_information"
+    order_number = alc.Column(alc.Integer, alc.ForeignKey('order.order_number'), primary_key=True)
+    info = alc.Column(alc.String)
+
+    def __init__(self, order_number, info):
+        self.order_number = order_number
+        self.info = info
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'ExtraInformation(' + res_str + ')'
 
 
 class OrderEmployee(Base):
@@ -330,14 +358,17 @@ class Request(Base):
     end_date = alc.Column(alc.Date)
     order_number = alc.Column(alc.Integer)
     material_id = alc.Column(alc.Integer, alc.ForeignKey('information_about_material.material_id'))
-    amount = alc.Column(alc.Integer)
+    amount_of_material = alc.Column(alc.Integer)
+    status = alc.Column(alc.Integer, alc.ForeignKey('request_statuses.status_id'))
 
-    def __init__(self, request_number, start_date, end_date, order_number, amount):
+    def __init__(self, request_number, start_date, end_date, order_number, material_id, amount_of_material, status):
         self.request_number = request_number
         self.start_date = start_date
         self.end_date = end_date
         self.order_number = order_number
-        self.amount = amount
+        self.material_id = material_id
+        self.amount_of_material = amount_of_material
+        self.status = status
 
     def __repr__(self):
         res_str = str()
@@ -345,6 +376,23 @@ class Request(Base):
             if key[0] != '_':
                 res_str += "{}: {} ".format(key, value)
         return 'Request(' + res_str + ')'
+
+
+class RequestStatuses(Base):
+    __tablename__ = "request_statuses"
+    status_id = alc.Column(alc.Integer, primary_key=True)
+    status_name = alc.Column(alc.String)
+
+    def __init__(self, status_id, status_name):
+        self.status_id = status_id
+        self.status_name = status_name
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'DeliveryStatuses(' + res_str + ')'
 
 
 class RequestEmployee(Base):
@@ -400,20 +448,24 @@ class StoreMaterial(Base):
 
 # Поиск работника по его логину и паролю
 def search_employee(login, passwd):
-    engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+    engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
     Session = alc.orm.sessionmaker(engine)
     session = Session()
-    Base.metadata.create_all(engine)
-    for record in session.query(Access, Employee).filter_by(login=login, password=passwd).join(Employee):
-        return [record.Employee.status, record.Employee.employee_id]
+    try:
+        Base.metadata.create_all(engine)
+        for record in session.query(Access, Employee).filter_by(login=login, password=passwd).join(Employee):
+            return [record.Employee.status, record.Employee.employee_id]
+    finally:
+        session.close()
 
 
 # Класс для взаимодействия с бд для менеджера
 class ManagerConnection:
     def __init__(self, manager_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
+        self.session = self.Session()
         self.manager_id = manager_id
 
     # Получение информации обо всех заказах менеджера
@@ -481,8 +533,8 @@ class ManagerConnection:
         session = self.Session()
         try:
             types = []
-            for record in session.query(InformationAboutMaterial.type).distinct(InformationAboutMaterial.type).\
-                    group_by(InformationAboutMaterial.type):
+            for record in session.query(Material.type).distinct(Material.type).\
+                    group_by(Material.type):
                 types.append(record.type)
             return types
         finally:
@@ -493,7 +545,7 @@ class ManagerConnection:
         session = self.Session()
         try:
             colors = []
-            for record in session.query(InformationAboutMaterial).filter_by(type=plastic_type):
+            for record in session.query(Material).filter_by(type=plastic_type):
                 colors.append(record.color)
             return colors
         finally:
@@ -503,11 +555,19 @@ class ManagerConnection:
     def send_order_to_worker(self, order_number):
         session = self.Session()
         try:
+            workers = session.query(Employee.employee_id).filter(Employee.status == 2).all()
+
             # Получение количества заказов для каждого из рабоников
             workers_orders = session.query(
                 OrderEmployee.employee_id,
                 alc.func.count(OrderEmployee.order_number).label('order_count')
             ).join(Employee).filter(Employee.status == 2).group_by(OrderEmployee.employee_id).all()
+
+            workers_with_orders = [item[0] for item in workers_orders]
+
+            for worker in workers:
+                if worker.employee_id not in workers_with_orders:
+                    workers_orders.append((worker.employee_id, 0))
 
             # Поиск работника с наименьшим количеством заказов
             optimal_worker = workers_orders[0]
@@ -516,6 +576,7 @@ class ManagerConnection:
                     optimal_worker = workers_orders[i]
 
             session.add(OrderEmployee(order_number, optimal_worker[0]))
+            session.commit()
         finally:
             session.close()
 
@@ -548,25 +609,26 @@ class ManagerConnection:
                 session.commit()
 
             # Определение id материала для заказа
-            material_id = session.query(alc.func.max(Material.material_id)).first()[0] + 1
-            session.add(Material(material_id, values[6], values[7]))
-            session.commit()
-
+            material_id = session.query(Material.material_id).filter(Material.type == values[6],
+                                                                     Material.color == values[7]
+                                                                     ).first()[0]
             # Определение номера заказа
             order_number = session.query(alc.func.max(Order.order_number)).first()[0] + 1
-            session.add(Order(order_number, values[10], client_id, model_id, values[9], date.today(), 0, 1, material_id))
+            session.add(Order(order_number, values[10], client_id, model_id,
+                              values[9], date.today(), date.today(), 1, material_id))
             session.commit()
+
+            # print(*session.query(Order).all(), sep='\n')
 
             session.add(OrderEmployee(order_number, values[11]))
             session.commit()
 
             # Если есть дополнительная информация, она добавляется в бд
-            if values[7] != '':
+            if values[8] != '':
                 session.add(ExtraInformation(order_number, values[8]))
                 session.commit()
 
             self.send_order_to_worker(order_number)
-            session.commit()
         finally:
             session.close()
 
@@ -672,9 +734,10 @@ class ManagerConnection:
 # Класс для взаимодействия с бд для работника
 class WorkerConnection:
     def __init__(self, worker_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
+        self.session = self.Session()
         self.worker_id = worker_id
 
     # Получение информации о текущих заказах работника
@@ -688,11 +751,16 @@ class WorkerConnection:
             requests_dates = dict()
             # Получение информации о датах поступления материалов
             for record in session.query(Request):
-                requests_dates[record.order_number] = record.end_date
+                if record.start_date == record.end_date and record.status == 1:
+                    requests_dates[record.order_number] = 'Заявка отправлена'
+                else:
+                    requests_dates[record.order_number] = record.end_date
             # Заполнение информации о датах поступления материалов
             for order in orders:
                 if order[0] in requests_dates.keys():
                     order[1] = requests_dates[order[0]]
+                else:
+                    order[1] = 'Заявка не отправлена'
             return orders
         finally:
             session.close()
@@ -756,93 +824,205 @@ class WorkerConnection:
         finally:
             session.close()
 
-# engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
-# Session = alc.orm.sessionmaker(engine)
-# session = Session()
-# materials = session.query(Material).join(OrderMaterial).filter_by(order_number=1).all()
-# print(materials)
-# print([material.color for material in materials])
-# print(session.query(Order).filter(Order.status.in_([1, 2, 3, 4, 5, 6])).all())
-# print(session.query(Employee, Occupation).join(Occupation).all())
+    def send_order_to_another(self, order_number):
+        session = self.Session()
+        try:
+            session.add(RejectedByEmployeeOrder(order_number, self.worker_id))
 
-# worker_con = WorkerConnection(2)
-# print(worker_con.get_more_order_info('1'))
+            rejected_workers = [item.employee_id for item in
+                                session.query(RejectedByEmployeeOrder).filter_by(order_number=order_number)]
 
-# manager_con = ManagerConnection(1)
-# manager_con.update_order_info(['7', 'Борзых', 'Никита', 'Юрьевич', '+7-999-888-32-32', 'allyru@gmail.com',
-#                                'C:/Users/Hunte/Desktop/Ашан Гагаринский 08.11.2018/IMG_0977.JPG',
-#                                {'type': 'ABS пластик', 'colors': ['Зелёный']}, '', 'Распечатать зелёное ведёрко', '0.00'])
-# print(manager_con.get_needed_modification_order_info(1), sep='\n')
-# print(manager_con.get_needed_modification_order_info(5))
-'''
+            workers_orders = session.query(
+                OrderEmployee.employee_id,
+                alc.func.count(OrderEmployee.order_number).label('order_count')
+            ).join(Employee).filter(Employee.status == 2, ~Employee.employee_id.in_(rejected_workers)).\
+                group_by(OrderEmployee.employee_id).all()
+
+            workers = session.query(Employee.employee_id).\
+                filter(Employee.status == 2, ~Employee.employee_id.in_(rejected_workers)).all()
+
+            if len(workers) == 0:
+                session.rollback()
+                return -1
+
+            workers_with_orders = [item[0] for item in workers_orders]
+
+            for worker in workers:
+                if worker.employee_id not in workers_with_orders:
+                    workers_orders.append((worker.employee_id, 0))
+
+            # Поиск работника с наименьшим количеством заказов
+            optimal_worker = workers_orders[0]
+            for i in range(1, len(workers_orders)):
+                if optimal_worker[1] > workers_orders[i][1]:
+                    optimal_worker = workers_orders[i]
+
+            session.delete(session.query(OrderEmployee).filter(OrderEmployee.order_number == order_number,
+                                                               OrderEmployee.employee_id == self.worker_id).first())
+            session.add(OrderEmployee(order_number, optimal_worker[0]))
+            session.commit()
+        finally:
+            session.close()
+
+    def get_order_material(self, order_number):
+        session = self.Session()
+        try:
+            material_info = [item for item in session.query(Material.type, Material.color).join(Order).\
+                             filter(Order.order_number == order_number).first()]
+
+            material_info.append([item[0] for item in session.query(InformationAboutMaterial.diameter_of_the_strand).\
+                                  filter(InformationAboutMaterial.type == material_info[0],
+                                         InformationAboutMaterial.color == material_info[1]).all()])
+
+            return material_info
+        finally:
+            session.close()
+
+    def send_request(self, info):
+        session = self.Session()
+        try:
+            material_id = session.query(InformationAboutMaterial.material_id).\
+                filter(InformationAboutMaterial.type == info[0],
+                       InformationAboutMaterial.color == info[1],
+                       InformationAboutMaterial.diameter_of_the_strand == info[2]
+                       ).first()[0]
+
+            request_number = session.query(alc.func.max(Request.request_number)).first()[0] + 1
+            request = Request(request_number, datetime.date.today(), datetime.date.today(),
+                              info[4], material_id, info[3], 1)
+            print(request)
+            session.add(Request(request_number, datetime.date.today(), datetime.date.today(),
+                                info[4], material_id, info[3], 1))
+
+            session.commit()
+        finally:
+            session.close()
+
+
+# Класс для взаимодействия с бд для снабженца
+class SupplierConnection:
+    def __init__(self, supplier_id):
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+        self.Session = alc.orm.sessionmaker(self.engine)
+        Base.metadata.create_all(self.engine)
+        self.supplier_id = supplier_id
+
+    def get_store_info(self):
+        session = self.Session()
+        try:
+            material = []
+            for record in session.query(InformationAboutMaterial, StoreMaterial).join(StoreMaterial):
+                material.append([record.InformationAboutMaterial.material_id, record.InformationAboutMaterial.color,\
+                      record.InformationAboutMaterial.diameter_of_the_strand, record.InformationAboutMaterial.type,\
+                      record.StoreMaterial.amount])
+            return material
+        except Exception as x:
+            print(x)
+        finally:
+            session.close()
+
+    def get_application_info(self):
+        session = self.Session()
+        try:
+            request = []
+            for record in session.query(Request, InformationAboutMaterial, RequestStatuses)\
+                    .join(InformationAboutMaterial).join(RequestStatuses):
+                request.append([record.Request.request_number, str(record.InformationAboutMaterial.type) + ' ' + \
+                        str(record.InformationAboutMaterial.color) + ' ' + str(record.InformationAboutMaterial. \
+                        diameter_of_the_strand) + ' мм', record.Request.amount_of_material, record.Request.start_date,
+                        record.Request.end_date, record.RequestStatuses.status_name])
+            return request
+        except Exception as x:
+            print(x)
+        finally:
+            session.close()
+
+    def get_supply_info(self):
+        session = self.Session()
+        try:
+            delivery = []
+            for record in session.query(Delivery, DeliveryStatuses).join(DeliveryStatuses):
+                delivery.append([record.Delivery.contract_number, record.DeliveryStatuses.status_name])
+            return delivery
+        finally:
+            session.close()
+
+    def get_more_supply_info(self, delivery_number):
+        session = self.Session()
+        try:
+            delivery = []
+            for record in session.query(Delivery, DeliveryStatuses, Provider).filter_by(contract_number = delivery_number). \
+                    join(DeliveryStatuses).join(ProviderDeliver).join(Provider):
+                delivery.append([record.Delivery.contract_number, record.Provider.company_name, 'txt', record.Delivery.material_id,
+                     record.DeliveryStatuses.status_name])
+            delivery_diction = {}
+            for record in session.query(InformationAboutMaterial):
+                delivery_diction[record.material_id] = str(record.type) + ' ' + str(record.color) + ' ' + str(
+                    record.diameter_of_the_strand) + ' мм'
+            for records in delivery:
+                records[3] = delivery_diction[records[3]]
+            return delivery[0]
+        finally:
+            session.close()
+
+    def get_end_data_application_info(self, number):
+        session = self.Session()
+        try:
+            for record in session.query(Request).filter_by(request_number=number[0]):
+                print(record.end_date)
+            return record.end_date
+        finally:
+            session.close()
+
+    def update_end_date_bd(self, text, end_date):
+        session = self.Session()
+        try:
+            print(1)
+            end_date = date(*map(int, end_date.split('-')))
+            session.query(Request).filter_by(request_number=text).update({Request.end_date: end_date})
+            session.commit()
+            print(5)
+        finally:
+            session.close()
+
 engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
 Session = alc.orm.sessionmaker(engine)
 session = Session()
-#for record in session.query(Order, Model3D, Material).filter_by(status=2).join(OrderEmployee).\
-#                     filter_by(employee_id=3).join(Statuses).join(Model3D).join(Material):
-#                 print(record.Order.order_number, record.Order.short_description, record.Model3D.model_file,
-#                                       record.Material.type + ' ' + record.Material.color)
-rec = session.query(Order).filter_by(order_number=4).first()
-order_1 = [rec.status, rec.order_number, rec.price, rec.client_id, rec.model_id, rec.short_description, rec.date,
-           rec.end_date, rec.material_id]
-rec = session.query(Model3D).filter_by(model_id=3).first()
-model_3d_1 = [rec.model_id, rec.model_file]
-rec = session.query(Material).filter_by(material_id=9).first()
-material_1 = [rec.material_id, rec.color, rec.type]
-rec = session.query(Client).filter_by(client_id=2).first()
-client_1 = [rec.surname, rec.name, rec.patronymic, rec.telephone_number, rec.email, rec.client_id]
-#
-rec = session.query(Order).filter_by(order_number=1).first()
-order_2 = [rec.status, rec.order_number, rec.price, rec.client_id, rec.model_id, rec.short_description, rec.date,
-           rec.end_date, rec.material_id]
+for record in session.query(Request).filter_by(request_number = 3):
+    print(record.end_date)
+'''
+x = []
+for record in session.query(Delivery, DeliveryStatuses, Provider).filter_by(contract_number = 5). \
+        join(DeliveryStatuses).join(ProviderDeliver).join(Provider):
+        x.append([record.Delivery.contract_number, record.Provider.company_name, 'txt', record.Delivery.material_id,
+               record.DeliveryStatuses.status_name])
+a = {}
+for record in session.query(InformationAboutMaterial):
+    a[record.material_id] = str(record.type) + ' ' + str(record.color)+ ' ' + str(record.diameter_of_the_strand) + ' мм'
 
-rec = session.query(Model3D).filter_by(model_id=1).first()
-model_3d_2 = [rec.model_id, rec.model_file]
+t = []
+for i in x:
+    i[3] = a[i[3]]
+print(x)'''
+# engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+# Session = alc.orm.sessionmaker(engine)
+# session = Session()
 
-rec = session.query(Material).filter_by(material_id=9).first()
-material_2 = [rec.material_id, rec.color, rec.type]
+# worker_con = WorkerConnection(2)
+# worker_con.get_order_material(1)
 
-rec = session.query(Client).filter_by(client_id=1).first()
-client_2 = [rec.surname, rec.name, rec.patronymic, rec.telephone_number, rec.email, rec.client_id]
-#
 
-print(order_1)
-print(model_3d_1)
-print(material_1)
-print(client_1)
-print(order_2)
-print(model_3d_2)
-print(material_2)
-print(client_2)
+# def show_workers(*args):
+#     print(args)
 
-order_str = ["Статус", "Номер заказа", "Цена", "ID_Клиента", "ID_Модели", "Краткая информация", "Дата поступления",
-             "Дата завершения", "ID_Материала"]
-model_3d_str = ["ID_Модели", "Файл модели"]
-material_str = ["ID_Материала", "Цвет", "Тип"]
-client_str = ["Фамилия", "Имя", "Отчество", "Телефонный номер", "Электронная почта"]
+# manager_con = ManagerConnection(1)
+# manager_con.send_order_to_worker(1)
 
-j = 0
-tabl = ''
-for i in order_1:
-    if i != order_2[j]:
-        tabl = tabl + order_str[j] + ': ' + str(i) + ' -> ' + str(order_2[j]) + '\n'
-    j += 1
-j = 0
-for i in model_3d_1:
-    if (i != model_3d_2[j]) and (j != 0):
-        tabl = tabl + model_3d_str[j] + ': ' + str(i) + ' -> ' + str(model_3d_2[j]) + '\n'
-    j += 1
-j = 0
-for i in material_1:
-    if (i != material_2[j]) and (j != 0):
-        tabl = tabl + material_str[j] + ': ' + str(i) + ' -> ' + str(material_2[j]) + '\n'
-    j += 1
-j = 0
-for i in client_1:
-    if (i != client_2[j]) and (j != 5):
-        tabl = tabl + client_str[j] + ': ' + str(i) + ' -> ' + str(client_2[j]) + '\n'
-    j += 1
-print(tabl)
+# print(*(item.employee_id for item in session.query(RejectedByEmployeeOrder).filter_by(order_number=1)))
 
-time = str(datetime.datetime.now())
-print(time[:19])'''
+# rejected_workers = [item.employee_id for item in
+#                     session.query(RejectedByEmployeeOrder).filter_by(order_number=1)]
+
+# potential_workers = [item.employee_id for item in
+#                      session.query(Employee).filter(Employee.status == 2,
+#                      ~Employee.employee_id.in_(rejected_workers))]

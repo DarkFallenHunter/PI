@@ -34,7 +34,6 @@ specific_exp = "(?:\([^\(\)]*\))|(?:;.*)|(?:[/\*].*\n)|(%s[-+]?[0-9]*\.?[0-9]*)"
 move_gcodes = ["G0", "G1", "G2", "G3"]
 
 class PyLine(object):
-
     __slots__ = ('x', 'y', 'z', 'e', 'f', 'i', 'j',
                  'raw', 'command', 'is_move',
                  'relative', 'relative_e',

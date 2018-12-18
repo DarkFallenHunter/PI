@@ -53,10 +53,14 @@ class UiChooseDate(object):
 "border-radius: 6px;\n"
 "")
         self.confirm_button.setObjectName("confirm_button")
-        self.textEdit = QtWidgets.QLineEdit(choose_date)
-        self.textEdit.setGeometry(QtCore.QRect(60, 70, 211, 24))
-        self.textEdit.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.textEdit.setObjectName("textEdit")
+        self.end_date_text = QtWidgets.QLineEdit(choose_date)
+        self.end_date_text.setGeometry(QtCore.QRect(60, 70, 211, 24))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(12)
+        self.end_date_text.setFont(font)
+        self.end_date_text.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.end_date_text.setObjectName("end_date_text")
 
         self.retranslateUi(choose_date)
         QtCore.QMetaObject.connectSlotsByName(choose_date)

@@ -2,15 +2,16 @@
 
 import sys
 import hashlib
-import data.db_module as db
+from data import db_module as db
 from interface.authorization_window import UiAuthorizationWindow
 from interface.manager_window import UiManagerWindow
 from interface.more_order_info_manager import UiMoreOrderInfoManager
 from interface.worker_window import UiWorkerWindow
 from interface.more_order_info_worker import UiMoreOrderInfoWorker
 from interface.modification_window import UiModificationWindow
-from interface.snabzenecwindow import UiSnabzenecWindow
 from interface.view_model_window import UiViewModelWindow
+from interface.make_application import UiMakeApplication
+from interface.snabzenecwindow import UiSnabzenecWindow
 from interface.choosedate import UiChooseDate
 from interface.add_supply import UiAddSupply
 from interface.infodelivery import UiInfoDelivery
@@ -92,7 +93,6 @@ class MainWindow(QtWidgets.QMainWindow):
 class ManagerMainWindow(UiManagerWindow):
     def __init__(self, manager_id):
         super().__init__()
-        self.manager_id = manager_id
         # Окно для отобрадения дополнительной информации о заказе
         self.order_info = OrderInfoManagerWindow()
         # self.order_info.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -100,9 +100,12 @@ class ManagerMainWindow(UiManagerWindow):
         self.refactor_filename = ''
         # Переменная для хранения пути к файлу нового заказа
         self.create_filename = ''
+        self.manager_id = manager_id
         self.db_connection = db.ManagerConnection(manager_id)
         # Окно для отображения ошибки при попытке отобразить информацию без выбора заказа
         self.show_info_error_window = ErrorWindow('Выберите необходимый заказ!', 'Ошибка')
+        self.filling_table_timer = QtCore.QTimer()
+        self.fill_modification_orders_combobox_timer = QtCore.QTimer()
 
     def reinit(self):
         self.create_order_button.clicked.connect(self.show_create_order)
@@ -127,6 +130,12 @@ class ManagerMainWindow(UiManagerWindow):
         self.refactor_order_button_ref.clicked.connect(self.update_order)
         self.entering_number()
         self.delete_order_button.clicked.connect(self.cancel_order)
+        self.filling_table_timer.timeout.connect(self.fill_table)
+        self.filling_table_timer.start(15000)
+        self.fill_modification_orders_combobox_timer.timeout.connect(
+            lambda: self.fill_combobox(self.need_refactoring_order_combobox,
+                                       self.db_connection.get_needed_modification_orders()))
+        self.fill_modification_orders_combobox_timer.start(60000)
 
     def show_create_order(self):
         if not self.manager_refactor_order_group.isHidden():
@@ -158,20 +167,21 @@ class ManagerMainWindow(UiManagerWindow):
 
     # Выбор файла для нового или дорабатываемого заказа
     def select_file(self, ref):
-        # Если выбирается файл для нового заказа
+        # Если выбирается файл для текущего заказа
         if not ref:
             if self.file_with_model_radio.isChecked():
                 file_filter = '*.stl'
             else:
                 file_filter = '*.png;;*.jpg'
-            self.create_filename = '..\\..\\3d\\' + \
-                QtWidgets.QFileDialog.getOpenFileName(self.select_file_button,
-                                                      'Select File', 'C:\\', file_filter
-                                                      )[0].split('/')[-1]
+            self.create_filename = QtWidgets.QFileDialog.getOpenFileName(self.select_file_button,
+                                                                         'Select File', 'C:\\', file_filter
+                                                                         )[0].split('/')[-1]
             if self.create_filename != '':
                 self.selected_file_label.setText(self.create_filename)
-                if self.create_filename.split('.')[-1] == 'stl' and self.type_of_plastic_combobox.currentText() != '':
-                    self.finale_price_label.setText(str(calc_length_stl_material(self.create_filename)) + ' рублей')
+                if self.create_filename.split('.')[-1] == 'stl':
+                    self.create_filename = '..\\..\\3d\\' + self.create_filename
+                    if self.type_of_plastic_combobox.currentText() != '':
+                        self.finale_price_label.setText(str(calc_length_stl_material(self.create_filename)) + ' рублей')
 
         # Если выбирается файл для дорабатываемого заказа
         else:
@@ -180,14 +190,16 @@ class ManagerMainWindow(UiManagerWindow):
             else:
                 file_filter = '*.png;;*.jpg'
             self.refactor_filename = QtWidgets.QFileDialog.getOpenFileName(self.select_file_button_ref,
-                                                                           'Select File', 'C:\\', file_filter)[0]
+                                                                           'Select File', 'C:\\', file_filter
+                                                                           )[0].split('/')[-1]
             if self.refactor_filename != '':
-                self.selected_file_label_ref.setText(self.refactor_filename.split('/')[-1])
-                if self.refactor_filename.split('.')[-1] == 'stl' \
-                        and self.type_of_plastic_combobox_ref.currentText() != '':
-                    self.finale_price_label_ref.setText(
-                        str(calc_length_stl_material(self.refactor_filename)) + ' рублей'
-                    )
+                self.selected_file_label_ref.setText(self.refactor_filename)
+                if self.refactor_filename.split('.')[-1] == 'stl':
+                    self.refactor_filename = '..\\..\\3d\\' + self.refactor_filename
+                    if self.type_of_plastic_combobox_ref.currentText() != '':
+                        self.finale_price_label_ref.setText(
+                            str(calc_length_stl_material(self.refactor_filename)) + ' рублей'
+                        )
 
     # Функция для заполнения combobox'ов
     def fill_combobox(self, combobox, values):
@@ -311,19 +323,19 @@ class ManagerMainWindow(UiManagerWindow):
         self.clear_all_fields(False)
         # Обновление комплитера для телефонов и таблицы с заказами
         self.entering_number()
-        self.fill_table()
+        # self.fill_table()
 
     # Обновление информации о заказа
     def update_order(self):
-        print([self.need_refactoring_order_combobox.currentText(),
-              self.surname_text_ref.text(), self.name_text_ref.text(),
-              self.patronymic_text_ref.text(), self.phone_text_ref.text(),
-              self.email_text_ref.text(), self.refactor_filename,
-              self.type_of_plastic_combobox_ref.currentText(),
-              self.color_of_plastic_combobox_ref.currentText(),
-              self.additional_info_text_ref.toPlainText(),
-              self.short_description_text_ref.toPlainText(),
-              self.finale_price_label_ref.text().split()[0]])
+        # print([self.need_refactoring_order_combobox.currentText(),
+        #       self.surname_text_ref.text(), self.name_text_ref.text(),
+        #       self.patronymic_text_ref.text(), self.phone_text_ref.text(),
+        #       self.email_text_ref.text(), self.refactor_filename,
+        #       self.type_of_plastic_combobox_ref.currentText(),
+        #       self.color_of_plastic_combobox_ref.currentText(),
+        #       self.additional_info_text_ref.toPlainText(),
+        #       self.short_description_text_ref.toPlainText(),
+        #       self.finale_price_label_ref.text().split()[0]])
         self.db_connection.update_order_info([self.need_refactoring_order_combobox.currentText(),
                                               self.surname_text_ref.text(), self.name_text_ref.text(),
                                               self.patronymic_text_ref.text(), self.phone_text_ref.text(),
@@ -369,6 +381,19 @@ class ManagerMainWindow(UiManagerWindow):
         else:
             self.show_info_error_window.show()
 
+    def complete_order(self):
+        if self.orders_info_table.currentItem() is not None:
+            if self.orders_info_table.currentColumn() != 0:
+                self.orders_info_table.setCurrentCell(self.orders_info_table.currentRow(), 0)
+
+            order_number = self.orders_info_table.currentItem().text()
+            self.orders_info_table.setCurrentCell(-1, -1)
+
+            self.db_connection.complete_order(int(order_number))
+            self.fill_table()
+        else:
+            self.show_info_error_window.show()
+
 
 # Окно для отображения инормации о заказе
 class OrderInfoManagerWindow(QtWidgets.QWidget):
@@ -394,19 +419,42 @@ class WorkerMainWindow(UiWorkerWindow):
         # Окно для отправки заказа на модификацию
         self.modification_window = ModificationWindow()
         self.modification_window.setWindowModality(QtCore.Qt.ApplicationModal)
+        # Окно для отправки заявки на материалы
+        self.ask_material_window = AskMaterialWindow()
+        self.modification_window.setWindowModality(QtCore.Qt.ApplicationModal)
         # Окно для отображения ошибки при попытке отобразить информацию без выбора заказа
         self.select_order_error_window = ErrorWindow('Выберите необходимый заказ!', 'Ошибка')
         # Окно для отображения ошибки при незаполненном поле причины отправки заказа на доработку
         self.refuse_order_error_window = ErrorWindow('Напишите причину отправки заказа на доработку!', 'Ошибка заполнения')
+        # Окно для отображения ошибки при невозможности отказа от заказа
+        self.resend_order_error_window = ErrorWindow('Вы не может отказаться от этого заказа!', 'Ошибка')
         self.db_connection = db.WorkerConnection(self.worker_id)
+        self.fill_orders_table_timer = QtCore.QTimer()
+        self.fill_new_orders_table_timer = QtCore.QTimer()
 
     def reinit(self):
         self.fill_table(self.db_connection.get_orders_info(), self.orders_info_table)
         self.fill_table(self.db_connection.get_new_orders(), self.new_orders_info_table)
-        self.more_info_order_button.clicked.connect(self.show_more_info)
+        self.more_info_order_button.clicked.connect(lambda: self.select_order(self.orders_info_table,
+                                                                              self.show_more_info))
+        self.complete_order_button.clicked.connect(lambda: self.select_order(self.orders_info_table,
+                                                                             self.complete_order))
         self.take_order_button.clicked.connect(self.take_new_order)
         self.order_info_window.ui.return_order_button.clicked.connect(self.modification_window.show)
         self.modification_window.ui.send_modification_button.clicked.connect(self.send_order_to_modification)
+        self.order_info_window.ui.give_order_button.clicked.connect(self.give_order_to_another)
+        self.refuse_order_button.clicked.connect(self.give_order_to_another)
+        self.ask_material_button.clicked.connect(lambda: self.select_order(self.orders_info_table,
+                                                                           self.ask_material))
+        self.ask_material_window.ui.add_button.clicked.connect(self.send_material_request)
+        self.fill_orders_table_timer.timeout.connect(
+            lambda: self.fill_table(self.db_connection.get_orders_info(), self.orders_info_table)
+        )
+        self.fill_orders_table_timer.start(15000)
+        self.fill_new_orders_table_timer.timeout.connect(
+            lambda: self.fill_table(self.db_connection.get_new_orders(), self.new_orders_info_table)
+        )
+        self.fill_new_orders_table_timer.start(15000)
 
     # Функция для закполнения таблиц
     def fill_table(self, orders, table):
@@ -421,23 +469,27 @@ class WorkerMainWindow(UiWorkerWindow):
                 table_item.setTextAlignment(QtCore.Qt.AlignCenter)
                 table.setItem(row_index, column_index, table_item)
 
-    # Отображение информации о заказе
-    def show_more_info(self):
-        if self.orders_info_table.currentItem() is not None:
-            if self.orders_info_table.currentColumn() != 0:
-                self.orders_info_table.setCurrentCell(self.orders_info_table.currentRow(), 0)
+    def select_order(self, table, processing_function):
+        if table.currentItem() is not None:
+            if table.currentColumn() != 0:
+                table.setCurrentCell(table.currentRow(), 0)
 
-            order_number = self.orders_info_table.currentItem().text()
-            self.orders_info_table.setCurrentCell(-1, -1)
+            order_number = table.currentItem().text()
+            table.setCurrentCell(-1, -1)
 
-            for index, item in enumerate(self.db_connection.get_more_order_info(order_number)):
-                table_item = QtWidgets.QTableWidgetItem(str(item))
-                table_item.setFlags(QtCore.Qt.ItemIsEnabled)
-                self.order_info_window.ui.order_info_table.setItem(index, 0, table_item)
+            processing_function(order_number)
 
-            self.order_info_window.show()
         else:
             self.select_order_error_window.show()
+
+    # Отображение информации о заказе
+    def show_more_info(self, order_number):
+        for index, item in enumerate(self.db_connection.get_more_order_info(order_number)):
+            table_item = QtWidgets.QTableWidgetItem(str(item))
+            table_item.setFlags(QtCore.Qt.ItemIsEnabled)
+            self.order_info_window.ui.order_info_table.setItem(index, 0, table_item)
+
+        self.order_info_window.show()
 
     # Приём выбранного заказа
     def take_new_order(self):
@@ -464,18 +516,41 @@ class WorkerMainWindow(UiWorkerWindow):
             self.refuse_order_error_window.show()
 
     # Завершение выбранного заказа
-    def complete_order(self):
-        if self.orders_info_table.currentItem() is not None:
-            if self.orders_info_table.currentColumn() != 0:
-                self.orders_info_table.setCurrentCell(self.orders_info_table.currentRow(), 0)
+    def complete_order(self, order_number):
+        self.db_connection.complete_order(order_number)
+        self.fill_table(self.db_connection.get_orders_info(), self.orders_info_table)
 
-            order_number = self.orders_info_table.currentItem().text()
-            self.orders_info_table.setCurrentCell(-1, -1)
-
-            self.db_connection.complete_order(order_number)
-            self.fill_table(self.db_connection.get_orders_info(), self.orders_info_table)
+    def give_order_to_another(self):
+        result = self.db_connection.send_order_to_another(self.order_info_window.ui.order_info_table.item(0, 0).text())
+        if result == -1:
+            self.resend_order_error_window.show()
         else:
-            self.select_order_error_window.show()
+            self.order_info_window.close()
+            self.fill_table(self.db_connection.get_orders_info(), self.orders_info_table)
+
+    def ask_material(self, order_number):
+        material_info = self.db_connection.get_order_material(order_number)
+
+        self.ask_material_window.ui.type_text.setText(material_info[0])
+        self.ask_material_window.ui.color_text.setText(material_info[1])
+        self.ask_material_window.ui.diametr_combobox.clear()
+        for diameter in material_info[2]:
+            item = QtGui.QStandardItem(str(diameter))
+            item.setBackground(QtGui.QColor(255, 255, 255))
+            self.ask_material_window.ui.diametr_combobox.model().appendRow(item)
+
+        self.ask_material_window.order_number = order_number
+        self.ask_material_window.show()
+
+    def send_material_request(self):
+        self.db_connection.send_request([self.ask_material_window.ui.type_text.text(),
+                                         self.ask_material_window.ui.color_text.text(),
+                                         self.ask_material_window.ui.diametr_combobox.currentText(),
+                                         self.ask_material_window.ui.numer_lineedit.text(),
+                                         self.ask_material_window.order_number])
+        self.fill_table(self.db_connection.get_orders_info(), self.orders_info_table)
+        self.ask_material_window.close()
+
 
 # Окно для отображения информации о заказе
 class OrderInfoWorkerWindow(QtWidgets.QWidget):
@@ -495,6 +570,16 @@ class ModificationWindow(QtWidgets.QWidget):
         self.ui.cancel_button.clicked.connect(self.close)
 
 
+# Окно дял запроса материалов
+class AskMaterialWindow(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.ui = UiMakeApplication()
+        self.ui.setupUi(self)
+        self.ui.cancel_button.clicked.connect(self.close)
+        self.order_number = 0
+
+
 # Окно для снабженца
 class SupplierMainWindow(UiSnabzenecWindow):
     def __init__(self, supplier_id):
@@ -509,8 +594,10 @@ class SupplierMainWindow(UiSnabzenecWindow):
         # Окно для просмотра информации о поставке
         self.info_delivery_window = InfoDeliveryWindow()
         self.info_delivery_window.setWindowModality(QtCore.Qt.ApplicationModal)
-
         self.db_connection = db.SupplierConnection(self.supplier_id)
+        self.fill_info_table_timer = QtCore.QTimer()
+        self.fill_application_table_timer = QtCore.QTimer()
+        self.fill_supply_info_table_timer = QtCore.QTimer()
 
     def reinit(self):
         self.fill_table(self.db_connection.get_store_info(), self.info_table)
@@ -523,6 +610,15 @@ class SupplierMainWindow(UiSnabzenecWindow):
         self.cancel_supply_button.clicked.connect(self.cancel_supply)
         self.confirm_delivery_button.clicked.connect(self.confirm_delivery)
         self.choose_date_window.ui.confirm_button.clicked.connect(self.update_end_date)
+        self.fill_info_table_timer.timeout.connect(
+            lambda: self.fill_table(self.db_connection.get_store_info(), self.info_table)
+        )
+        self.fill_info_table_timer.start(15000)
+        self.fill_application_table_timer.timeout.connect(
+            lambda: self.fill_table(self.db_connection.get_application_info(), self.application_info_table)
+        )
+        self.fill_application_table_timer.start(15000)
+
 
     # Функция для закполнения таблиц
     def fill_table(self, records, table):
@@ -567,8 +663,8 @@ class SupplierMainWindow(UiSnabzenecWindow):
 
             number = self.application_info_table.currentItem().text()
             self.application_info_table.setCurrentCell(-1, -1)
-            self.choose_date_window.request_number = number[0]
-            self.choose_date_window.ui.textEdit.setText(str(self.db_connection.get_end_data_application_info(number)))
+            self.choose_date_window.request_number = number
+            self.choose_date_window.ui.end_date_text.setText(str(self.db_connection.get_end_data_application_info(number)))
 
             self.choose_date_window.show()
         else:
@@ -576,13 +672,10 @@ class SupplierMainWindow(UiSnabzenecWindow):
 
     # Обновление даты поставки
     def update_end_date(self):
-        print(3)
-        if self.choose_date_window.ui.textEdit.text() != '':
-            print(2)
-            self.db_connection.update_end_date_bd(self.choose_date_window.request_number, str(self.choose_date_window.ui.textEdit.text()))
+        if self.choose_date_window.ui.end_date_text.text() != '':
+            self.db_connection.update_end_date_bd(self.choose_date_window.request_number, str(self.choose_date_window.ui.end_date_text.text()))
             self.fill_table(self.db_connection.get_application_info(), self.application_info_table)
             self.choose_date_window.close()
-
 
     # Отправить материалы
     def send_material(self):
@@ -596,6 +689,7 @@ class SupplierMainWindow(UiSnabzenecWindow):
     def confirm_delivery(self):
         ...
 
+
 # Окно для сообщения о дате поставки
 class ChooseDateWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -605,6 +699,7 @@ class ChooseDateWindow(QtWidgets.QWidget):
         self.ui.cancel_button.clicked.connect(self.close)
         self.request_number = str()
 
+
 # Окно для просмотра информации о поставке
 class InfoDeliveryWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -613,6 +708,7 @@ class InfoDeliveryWindow(QtWidgets.QWidget):
         self.ui.setupUi(self)
         self.ui.close_button.clicked.connect(self.close)
 
+
 # Окно для добавления новой поставки
 class AddSupplyWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -620,8 +716,6 @@ class AddSupplyWindow(QtWidgets.QWidget):
         self.ui = UiAddSupply()
         self.ui.setupUi(self)
         self.ui.cancel_button.clicked.connect(self.close)
-
-
 
 
 if __name__ == "__main__":

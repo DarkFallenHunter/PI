@@ -798,7 +798,7 @@ class UiManagerWindow(object):
         self.orders_info_label.setObjectName("orders_info_label")
         self.show_more_info_button = QtWidgets.QPushButton(self.manager_show_orders_info_group)
         self.show_more_info_button.setEnabled(True)
-        self.show_more_info_button.setGeometry(QtCore.QRect(260, 460, 221, 41))
+        self.show_more_info_button.setGeometry(QtCore.QRect(410, 470, 221, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(12)
@@ -811,9 +811,25 @@ class UiManagerWindow(object):
 "border-radius: 6px;\n"
 "")
         self.show_more_info_button.setObjectName("show_more_info_button")
+        self.complete_order_button = QtWidgets.QPushButton(self.manager_show_orders_info_group)
+        self.complete_order_button.setEnabled(True)
+        self.complete_order_button.setGeometry(QtCore.QRect(700, 470, 221, 41))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.complete_order_button.setFont(font)
+        self.complete_order_button.setStyleSheet(
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(171,171,171,1));\n"
+                "border-color: rgb(102, 102, 102);\n"
+                "border: 2px solid rgb(102, 102, 102);\n"
+                "border-radius: 6px;\n"
+                "")
+        self.complete_order_button.setObjectName("complete_order_button")
         self.delete_order_button = QtWidgets.QPushButton(self.manager_show_orders_info_group)
         self.delete_order_button.setEnabled(True)
-        self.delete_order_button.setGeometry(QtCore.QRect(560, 460, 221, 41))
+        self.delete_order_button.setGeometry(QtCore.QRect(120, 470, 221, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(12)
@@ -830,6 +846,7 @@ class UiManagerWindow(object):
         self.orders_info_label.raise_()
         self.orders_info_table.raise_()
         self.show_more_info_button.raise_()
+        self.complete_order_button.raise_()
         self.manager_create_order_group.raise_()
         self.manager_refactor_order_group.raise_()
         self.manager_show_orders_info_group.raise_()
@@ -917,6 +934,7 @@ class UiManagerWindow(object):
         self.orders_info_table.setSortingEnabled(__sortingEnabled)
         self.orders_info_label.setText(_translate("manager_window", "ИНФОРМАЦИЯ О ЗАКАЗАХ"))
         self.show_more_info_button.setText(_translate("manager_window", "Подробная информация"))
+        self.complete_order_button.setText(_translate("manager_window", "Завершить заказ"))
         self.delete_order_button.setText(_translate("manager_window", "Отменить заказ"))
 
 

@@ -9,31 +9,31 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/CRM$workerwindow.coverage" NAME="workerwindow Coverage Results" MODIFIED="1541697325264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
-    <SUITE FILE_PATH="coverage/CRM$more_order_info_manager.coverage" NAME="more_order_info_manager Coverage Results" MODIFIED="1542918701629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$mainwindow__1_.coverage" NAME="mainwindow (1) Coverage Results" MODIFIED="1543520881564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1540490594048" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$pySlice.coverage" NAME="pySlice Coverage Results" MODIFIED="1544169395594" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
-    <SUITE FILE_PATH="coverage/CRM$main.coverage" NAME="main Coverage Results" MODIFIED="1544647623443" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/CRM$snabzenecwindow__1_.coverage" NAME="snabzenecwindow (1) Coverage Results" MODIFIED="1544734072740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Downloads/Telegram Desktop" />
+    <SUITE FILE_PATH="coverage/CRM$manager_window.coverage" NAME="manager_window Coverage Results" MODIFIED="1544643423294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$db_module.coverage" NAME="db_module Coverage Results" MODIFIED="1544627373302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/CRM$orderinfo.coverage" NAME="orderinfo Coverage Results" MODIFIED="1540490633432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$infodelivery.coverage" NAME="infodelivery Coverage Results" MODIFIED="1544735292085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
     <SUITE FILE_PATH="coverage/CRM$dbtables.coverage" NAME="dbtables Coverage Results" MODIFIED="1543509812276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/CRM$view_model_window.coverage" NAME="view_model_window Coverage Results" MODIFIED="1542919854761" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$infodelivery.coverage" NAME="infodelivery Coverage Results" MODIFIED="1544629429637" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$choosedate.coverage" NAME="choosedate Coverage Results" MODIFIED="1544638091760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$db_module.coverage" NAME="db_module Coverage Results" MODIFIED="1544642427640" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
-    <SUITE FILE_PATH="coverage/CRM$worker_window.coverage" NAME="worker_window Coverage Results" MODIFIED="1544636699471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$make_application.coverage" NAME="make_application Coverage Results" MODIFIED="1544537827797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$managerwindow.coverage" NAME="managerwindow Coverage Results" MODIFIED="1544643409337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Интерфейс" />
+    <SUITE FILE_PATH="coverage/CRM$view_model_window.coverage" NAME="view_model_window Coverage Results" MODIFIED="1544297809340" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$worker_window.coverage" NAME="worker_window Coverage Results" MODIFIED="1544736082869" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$choosedate.coverage" NAME="choosedate Coverage Results" MODIFIED="1544297903153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1540490594048" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
     <SUITE FILE_PATH="coverage/CRM$orderinfowindow.coverage" NAME="orderinfowindow Coverage Results" MODIFIED="1542658757366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$try.coverage" NAME="try Coverage Results" MODIFIED="1542629110342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/CRM$managerwindow.coverage" NAME="managerwindow Coverage Results" MODIFIED="1542210360315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
-    <SUITE FILE_PATH="coverage/CRM$authorization_window.coverage" NAME="authorization_window Coverage Results" MODIFIED="1544538411181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$authorizationwindow.coverage" NAME="authorizationwindow Coverage Results" MODIFIED="1540534713733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$try.coverage" NAME="try Coverage Results" MODIFIED="1545131114020" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/CRM$main.coverage" NAME="main Coverage Results" MODIFIED="1544718276593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CRM$infowindow.coverage" NAME="infowindow Coverage Results" MODIFIED="1541680942310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
     <SUITE FILE_PATH="coverage/CRM$mainstyle.coverage" NAME="mainstyle Coverage Results" MODIFIED="1540739081490" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
-    <SUITE FILE_PATH="coverage/CRM$choosefile.coverage" NAME="choosefile Coverage Results" MODIFIED="1544539789639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$orderinfo.coverage" NAME="orderinfo Coverage Results" MODIFIED="1540490633432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$manager_window.coverage" NAME="manager_window Coverage Results" MODIFIED="1544623470437" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$add_supply.coverage" NAME="add_supply Coverage Results" MODIFIED="1544636833511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$make_application.coverage" NAME="make_application Coverage Results" MODIFIED="1544165986326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
-    <SUITE FILE_PATH="coverage/CRM$snabzenecwindow.coverage" NAME="snabzenecwindow Coverage Results" MODIFIED="1544647154129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$choosefile.coverage" NAME="choosefile Coverage Results" MODIFIED="1544297850627" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$run.coverage" NAME="run Coverage Results" MODIFIED="1544736828898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CRM$more_order_info_manager.coverage" NAME="more_order_info_manager Coverage Results" MODIFIED="1542918701629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$authorizationwindow.coverage" NAME="authorizationwindow Coverage Results" MODIFIED="1540534713733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$mainwindow__1_.coverage" NAME="mainwindow (1) Coverage Results" MODIFIED="1543520881564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$workerwindow.coverage" NAME="workerwindow Coverage Results" MODIFIED="1541697325264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface/windows_style" />
+    <SUITE FILE_PATH="coverage/CRM$add_supply.coverage" NAME="add_supply Coverage Results" MODIFIED="1544538490200" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
+    <SUITE FILE_PATH="coverage/CRM$snabzenecwindow.coverage" NAME="snabzenecwindow Coverage Results" MODIFIED="1544735016276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/interface" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -52,28 +52,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/interface/manager_window.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="746" column="28" lean-forward="true" selection-start-line="746" selection-start-column="28" selection-end-line="746" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/data/db_module.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="460" lean-forward="true" selection-start-line="460" selection-end-line="460" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="68" column="40" lean-forward="true" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
+            <state relative-caret-position="529">
+              <caret line="625" column="30" selection-start-line="625" selection-start-column="30" selection-end-line="625" selection-end-column="30" />
               <folding>
                 <element signature="e#25#35#0" expanded="true" />
               </folding>
@@ -82,19 +64,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/interface/choosedate.py">
+        <entry file="file://$PROJECT_DIR$/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="55" column="56" lean-forward="true" selection-start-line="55" selection-start-column="56" selection-end-line="55" selection-end-column="56" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/interface/add_supply.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="14" column="59" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+            <state relative-caret-position="153">
+              <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -102,8 +75,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/interface/snabzenecwindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="440" lean-forward="true" selection-start-line="440" selection-end-line="440" />
+            <state relative-caret-position="-3326">
+              <caret line="169" column="67" selection-start-line="169" selection-start-column="67" selection-end-line="169" selection-end-column="67" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/interface/infodelivery.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="58" column="6" selection-start-line="58" selection-start-column="6" selection-end-line="58" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/db_module.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="254" selection-start-line="254" selection-end-line="254" />
+              <folding>
+                <element signature="e#25#49#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -111,8 +105,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/interface/worker_window.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="231" column="30" selection-start-line="231" selection-start-column="13" selection-end-line="231" selection-end-column="30" />
+            <state relative-caret-position="99">
+              <caret line="307" column="87" selection-start-line="307" selection-start-column="87" selection-end-line="307" selection-end-column="87" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/model/try.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="159">
+              <caret line="22" column="41" lean-forward="true" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
+              <folding>
+                <element signature="e#85#127#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -128,40 +134,37 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>UiModificationWindow</find>
-      <find>view_model_window</find>
-      <find>UiViewModelWindow</find>
-      <find>Ui_SnabzenecWindow</find>
-      <find>UiWorkerWindow</find>
-      <find>UiMoreOrderInfoManager</find>
-      <find>UiChooseDateWindow</find>
-      <find>ModificationWindow</find>
-      <find>UiMoreOrderInfoWorker</find>
-      <find>create_order_button</find>
-      <find>show_create_order</find>
-      <find>WorkerConnection</find>
-      <find>fill_table</find>
-      <find>more_info_order_button</find>
-      <find>show_more_info</find>
-      <find>engine</find>
-      <find>take_order_button</find>
-      <find>OrderInfoWorkerWindow</find>
-      <find>order_number</find>
-      <find>get_orders_info</find>
+      <find>class</find>
+      <find>filter</find>
+      <find>color_of_plastic</find>
+      <find>la</find>
+      <find>color_of</find>
+      <find>WorkerMa</find>
+      <find>Request</find>
+      <find>connect</find>
+      <find>delete</find>
+      <find>show</find>
+      <find>compl</find>
+      <find>dele</find>
+      <find>show_more</find>
+      <find>delivery_statuses</find>
+      <find>delivery</find>
+      <find>zayavka_frame</find>
+      <find>application</find>
+      <find>button</find>
+      <find>сообщить</find>
+      <find>date</find>
+      <find>stock_button</find>
+      <find>buy_button</find>
+      <find>под</find>
+      <find>group</find>
+      <find>orders_info_group</find>
       <find>orders_info_table</find>
       <find>table</find>
-      <find>tget_more_order_info</find>
-      <find>info_table</find>
-      <find>get_more_order_info</find>
-      <find>order_info_window</find>
-      <find>order_info_table</find>
-      <find>ChooseDateWindow</find>
-      <find>UiChooseDate</find>
-      <find>search_employee</find>
+      <find>Теку</find>
+      <find>current</find>
+      <find>raise</find>
     </findStrings>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -187,19 +190,28 @@
         <option value="$PROJECT_DIR$/interface/mainwindow.py" />
         <option value="$PROJECT_DIR$/data/mainwindow.py" />
         <option value="$PROJECT_DIR$/interface/moreorderinfo.py" />
-        <option value="$PROJECT_DIR$/../hash_pass.py" />
-        <option value="$PROJECT_DIR$/model/try.py" />
+        <option value="D:/hash_pass.py" />
         <option value="$PROJECT_DIR$/interface/more_order_info_manager.py" />
-        <option value="$PROJECT_DIR$/interface/choosefile.py" />
-        <option value="$PROJECT_DIR$/interface/infodelivery.py" />
-        <option value="$PROJECT_DIR$/interface/manager_window.py" />
         <option value="$PROJECT_DIR$/interface/view_model_window.py" />
+        <option value="$PROJECT_DIR$/interface/choosefile.py" />
+        <option value="$PROJECT_DIR$/data/data/main.py" />
+        <option value="$PROJECT_DIR$/data/__init__.py" />
         <option value="$PROJECT_DIR$/data/pySlice.py" />
+        <option value="$PROJECT_DIR$/interface/make_application.py" />
         <option value="$PROJECT_DIR$/interface/add_supply.py" />
-        <option value="$PROJECT_DIR$/interface/snabzenecwindow.py" />
+        <option value="$PROJECT_DIR$/../Интерфейс/managerwindow.py" />
+        <option value="$PROJECT_DIR$/interface/manager_window.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/run.py" />
         <option value="$PROJECT_DIR$/interface/choosedate.py" />
         <option value="$PROJECT_DIR$/data/main.py" />
+        <option value="$PROJECT_DIR$/interface/snabzenecwindow.py" />
+        <option value="$PROJECT_DIR$/interface/infodelivery.py" />
+        <option value="$PROJECT_DIR$/interface/workerwindow.py" />
+        <option value="$USER_HOME$/Downloads/Telegram Desktop/workerwindow.py" />
         <option value="$PROJECT_DIR$/data/db_module.py" />
+        <option value="$PROJECT_DIR$/interface/worker_window.py" />
+        <option value="$PROJECT_DIR$/model/try.py" />
       </list>
     </option>
   </component>
@@ -209,7 +221,6 @@
     <option name="width" value="1385" />
     <option name="height" value="745" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -234,7 +245,8 @@
             </path>
             <path>
               <item name="CRM" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="CRM" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -245,18 +257,18 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Реляционные базы данных/python_labs" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Универ\Программная инженерия\CRM\interface" />
       <recent name="D:\Универ\Программная инженерия\CRM\data" />
+      <recent name="D:\Универ\Программная инженерия\CRM" />
+      <recent name="D:\Универ\Программная инженерия\CRM\data\data" />
       <recent name="D:\Универ\Программная инженерия\CRM\interface\windows_style" />
-      <recent name="D:\Универ\Программная инженерия\CRM\d11" />
-      <recent name="D:\Универ\Программная инженерия\CRM\1" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -271,8 +283,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="add_supply" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.try">
+    <configuration name="infodelivery" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CRM" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -285,7 +297,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interface/add_supply.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interface/infodelivery.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -294,7 +306,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="choosedate" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CRM" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -302,56 +314,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/interface" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interface/choosedate.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="db_module" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CRM" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data/db_module.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CRM" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -382,20 +350,64 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="try" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CRM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/try.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="worker_window" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CRM" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/interface" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interface/worker_window.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.add_supply" />
-      <item itemvalue="Python.choosedate" />
+      <item itemvalue="Python.run" />
       <item itemvalue="Python.snabzenecwindow" />
-      <item itemvalue="Python.db_module" />
+      <item itemvalue="Python.infodelivery" />
+      <item itemvalue="Python.worker_window" />
+      <item itemvalue="Python.try" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
+        <item itemvalue="Python.try" />
+        <item itemvalue="Python.run" />
+        <item itemvalue="Python.worker_window" />
+        <item itemvalue="Python.infodelivery" />
         <item itemvalue="Python.snabzenecwindow" />
-        <item itemvalue="Python.db_module" />
-        <item itemvalue="Python.choosedate" />
-        <item itemvalue="Python.add_supply" />
       </list>
     </recent_temporary>
   </component>
@@ -409,23 +421,26 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540032974867</updated>
-      <workItem from="1543769032219" duration="7889000" />
-      <workItem from="1543908916995" duration="24704000" />
-      <workItem from="1544164596183" duration="6823000" />
-      <workItem from="1544270197963" duration="622000" />
-      <workItem from="1544346302067" duration="402000" />
-      <workItem from="1544534007553" duration="16713000" />
-      <workItem from="1544596542747" duration="5080000" />
-      <workItem from="1544622099322" duration="1319000" />
-      <workItem from="1544623935481" duration="1424000" />
-      <workItem from="1544625390107" duration="73000" />
-      <workItem from="1544625489343" duration="11000" />
-      <workItem from="1544625525771" duration="20722000" />
+      <workItem from="1544127675936" duration="333000" />
+      <workItem from="1544164486293" duration="103000" />
+      <workItem from="1544165155825" duration="1189000" />
+      <workItem from="1544276298094" duration="9626000" />
+      <workItem from="1544346892975" duration="18078000" />
+      <workItem from="1544534971407" duration="15825000" />
+      <workItem from="1544616726035" duration="22352000" />
+      <workItem from="1544714980106" duration="16839000" />
+      <workItem from="1544776889101" duration="661000" />
+      <workItem from="1544953016484" duration="205000" />
+      <workItem from="1544966280195" duration="1808000" />
+      <workItem from="1545035564984" duration="841000" />
+      <workItem from="1545080286251" duration="644000" />
+      <workItem from="1545116806851" duration="793000" />
+      <workItem from="1545121141626" duration="7262000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85782000" />
+    <option name="totallyTimeSpent" value="96559000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -437,45 +452,78 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21104388" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.3295082" />
-      <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49924356" visible="true" weight="0.22521247" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.23654391" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="7" weight="0.3295082" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50075644" side_tool="true" weight="0.352459" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.12606232" />
-      <window_info anchor="bottom" id="Python Console" order="13" weight="0.3289689" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32569557" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924356" weight="0.38297874" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39770868" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50075644" side_tool="true" weight="0.352459" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.35679215" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.3289689" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.43207857" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32980332" />
       <window_info anchor="right" id="Database" order="4" weight="0.32980332" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18986385" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32569557" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49924356" visible="true" weight="0.38297874" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39770868" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50075644" side_tool="true" weight="0.352459" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.35679215" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.3289689" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.43207857" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.32980332" />
+      <window_info anchor="right" id="Database" order="4" weight="0.32980332" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/1/py1.py" />
-    <entry file="file://$PROJECT_DIR$/../Проект 2020/Interface101v1.py" />
     <entry file="file://$PROJECT_DIR$/interface/__init__.py" />
     <entry file="file://$PROJECT_DIR$/interface/windows_style/__init__.py" />
     <entry file="file://$PROJECT_DIR$/interface/windows_style/mainstyle.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/pymysql/cursors.py" />
-    <entry file="file://$PROJECT_DIR$/../Интерфейс/workerwindow.py" />
-    <entry file="file://$PROJECT_DIR$/../Интерфейс/infowindow.py" />
+    <entry file="file://$PROJECT_DIR$/../Интерфейс/workerwindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="262" lean-forward="true" selection-start-line="262" selection-end-line="262" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Интерфейс/infowindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="63" column="67" lean-forward="true" selection-start-line="63" selection-start-column="67" selection-end-line="63" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/interface/modification_window.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -484,15 +532,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/interface/orderinfowindow.py" />
-    <entry file="file://$PROJECT_DIR$/../hash_pass.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/pymysql/cursors.py" />
-    <entry file="file://$PROJECT_DIR$/model/try.py">
+    <entry file="file://D:/hash_pass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="57" selection-start-line="57" selection-end-line="57" />
+        <state relative-caret-position="442">
+          <caret line="30" column="19" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/pymysql/cursors.py" />
     <entry file="file://$PROJECT_DIR$/interface/more_order_info_worker.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -507,94 +554,270 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/data/__init__.py" />
     <entry file="file://$PROJECT_DIR$/interface/view_model_window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="40" lean-forward="true" selection-start-line="22" selection-start-column="40" selection-end-line="22" selection-end-column="40" />
+        <state relative-caret-position="-654">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/pySlice.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37/Lib/site-packages/pymysql/cursors.py">
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/identity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="169" selection-start-line="169" selection-end-line="169" />
+        <state relative-caret-position="221">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/interface/choosefile.py">
+    <entry file="file://C:/Python37/Lib/abc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+        <state relative-caret-position="114">
+          <caret line="138" selection-start-line="138" selection-end-line="138" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/util/_collections.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="803" selection-start-line="803" selection-end-line="803" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="400" selection-start-line="400" selection-end-line="400" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/inspection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="75" selection-start-line="75" selection-end-line="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/mapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="2016" selection-start-line="2016" selection-end-line="2016" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/query.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="153" selection-start-line="153" selection-end-line="153" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/sql/type_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="550" selection-start-line="550" selection-end-line="550" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/sql/operators.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="1451" selection-start-line="1451" selection-end-line="1451" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/sql/elements.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="3080" selection-start-line="3080" selection-end-line="3080" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/sql/sqltypes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="2722" selection-start-line="2722" selection-end-line="2722" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/sql/default_comparator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="182" selection-start-line="182" selection-end-line="182" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/attributes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="179" selection-start-line="179" selection-end-line="179" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/properties.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="269" selection-start-line="269" selection-end-line="269" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/util/langhelpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="844" selection-start-line="844" selection-end-line="844" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/instrumentation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="378" selection-start-line="378" selection-end-line="378" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/interface/authorization_window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
+        <state relative-caret-position="-44">
           <caret line="39" column="26" selection-start-line="39" selection-start-column="26" selection-end-line="39" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/interface/worker_window.py">
+    <entry file="file://C:/Python37/Lib/site-packages/sqlalchemy/orm/session.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="231" column="30" selection-start-line="231" selection-start-column="13" selection-end-line="231" selection-end-column="30" />
+        <state relative-caret-position="175">
+          <caret line="953" selection-start-line="953" selection-end-line="953" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/interface/infodelivery.py">
+    <entry file="file://$PROJECT_DIR$/interface/make_application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="95" column="30" selection-start-line="95" selection-start-column="20" selection-end-line="95" selection-end-column="30" />
+        <state relative-caret-position="131">
+          <caret line="145" column="24" selection-start-line="145" selection-start-column="20" selection-end-line="145" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Интерфейс/managerwindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="834" column="14" lean-forward="true" selection-start-line="834" selection-start-column="14" selection-end-line="834" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/pySlice.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="30" column="28" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/interface/add_supply.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="14" column="59" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+        <state relative-caret-position="2346">
+          <caret line="138" column="37" selection-start-line="138" selection-start-column="37" selection-end-line="138" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/interface/snabzenecwindow.py">
+    <entry file="file://$PROJECT_DIR$/interface/choosefile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="440" lean-forward="true" selection-start-line="440" selection-end-line="440" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/interface/manager_window.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="746" column="28" lean-forward="true" selection-start-line="746" selection-start-column="28" selection-end-line="746" selection-end-column="28" />
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/interface/choosedate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="55" column="56" lean-forward="true" selection-start-line="55" selection-start-column="56" selection-end-line="55" selection-end-column="56" />
+        <state relative-caret-position="918">
+          <caret line="54" column="16" lean-forward="true" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/snabzenecwindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="164" column="8" lean-forward="true" selection-start-line="164" selection-start-column="8" selection-end-line="164" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/manager_window.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1060">
+          <caret line="943" column="43" selection-start-line="943" selection-start-column="43" selection-end-line="943" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/workerwindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="99">
+          <caret line="220" column="8" selection-start-line="220" selection-start-column="8" selection-end-line="220" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Реляционные базы данных/python_labs/lab8_threads.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/loading.gif">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/snabzenecwindow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3326">
+          <caret line="169" column="67" selection-start-line="169" selection-start-column="67" selection-end-line="169" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/infodelivery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="58" column="6" selection-start-line="58" selection-start-column="6" selection-end-line="58" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/db_module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="254" selection-start-line="254" selection-end-line="254" />
+          <folding>
+            <element signature="e#25#49#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="68" column="40" lean-forward="true" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
+        <state relative-caret-position="529">
+          <caret line="625" column="30" selection-start-line="625" selection-start-column="30" selection-end-line="625" selection-end-column="30" />
           <folding>
             <element signature="e#25#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/db_module.py">
+    <entry file="file://$PROJECT_DIR$/interface/worker_window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="460" lean-forward="true" selection-start-line="460" selection-end-line="460" />
+        <state relative-caret-position="99">
+          <caret line="307" column="87" selection-start-line="307" selection-start-column="87" selection-end-line="307" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/try.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="22" column="41" lean-forward="true" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
+          <folding>
+            <element signature="e#85#127#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

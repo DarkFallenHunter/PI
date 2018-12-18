@@ -67,6 +67,7 @@ class UiInfoDelivery(object):
         font.setPointSize(11)
         item.setFont(font)
         self.info_table.setVerticalHeaderItem(4, item)
+        self.info_table.setColumnWidth(0, 239)
         self.info_table.horizontalHeader().setVisible(False)
         self.info_table.horizontalHeader().setHighlightSections(True)
         self.info_table.verticalHeader().setVisible(True)

@@ -97,11 +97,13 @@ class Delivery(Base):
     contract_number = alc.Column(alc.Integer, primary_key=True)
     material_id = alc.Column(alc.Integer)
     amount = alc.Column(alc.Integer)
-    status = alc.Column(alc.Integer, alc.ForeignKey('delivery_statuses.statuses_id'))
+    status = alc.Column(alc.Integer, alc.ForeignKey('delivery_statuses.status_id'))
     start_delivery = alc.Column(alc.DateTime)
     end_delivery = alc.Column(alc.DateTime)
+    path_to_document = alc.Column(alc.String)
 
-    def __init__(self, supplier_id, contract_number, material_id, amount, status, start_delivery, end_delivery):
+    def __init__(self, supplier_id, contract_number, material_id, amount,
+                 status, start_delivery, end_delivery, path_to_document):
         self.supplier_id = supplier_id
         self.contract_number = contract_number
         self.material_id = material_id
@@ -109,6 +111,7 @@ class Delivery(Base):
         self.status = status
         self.start_delivery = start_delivery
         self.end_delivery = end_delivery
+        self.path_to_document = path_to_document
 
     def __repr__(self):
         res_str = str()
@@ -120,11 +123,11 @@ class Delivery(Base):
 
 class DeliveryStatuses(Base):
     __tablename__ = "delivery_statuses"
-    statuses_id = alc.Column(alc.Integer, primary_key=True)
+    status_id = alc.Column(alc.Integer, primary_key=True)
     status_name = alc.Column(alc.String)
 
-    def __init__(self, statuses_id, status_name):
-        self.statuses_id = statuses_id
+    def __init__(self, status_id, status_name):
+        self.status_id = status_id
         self.status_name = status_name
 
     def __repr__(self):
@@ -224,11 +227,10 @@ class Order(Base):
     model_id = alc.Column(alc.Integer, alc.ForeignKey('3d_model.model_id'))
     short_description = alc.Column(alc.String)
     date = alc.Column(alc.Date)
-    end_date = alc.Column(alc.Date)
     material_id = alc.Column(alc.Integer, alc.ForeignKey('material.material_id'))
 
     def __init__(self, order_number, price, client_id, model_id,
-                 short_description, date, end_date, status, material_id):
+                 short_description, date, status, material_id):
         self.status = status
         self.order_number = order_number
         self.price = price
@@ -236,7 +238,6 @@ class Order(Base):
         self.model_id = model_id
         self.short_description = short_description
         self.date = date
-        self.end_date = end_date
         self.material_id = material_id
 
     def __repr__(self):
@@ -245,6 +246,23 @@ class Order(Base):
             if key[0] != '_':
                 res_str += "{}: {} ".format(key, value)
         return 'Order(' + res_str + ')'
+
+
+class OrderDateEnds(Base):
+    __tablename__ = "order_date_ends"
+    order_number = alc.Column(alc.Integer, alc.ForeignKey('order.order_number'), primary_key=True)
+    end_date = alc.Column(alc.DateTime)
+
+    def __init__(self, order_number, end_date):
+        self.order_number = order_number
+        self.end_date = end_date
+
+    def __repr__(self):
+        res_str = str()
+        for key, value in self.__dict__.items():
+            if key[0] != '_':
+                res_str += "{}: {} ".format(key, value)
+        return 'OrderDateEnds(' + res_str + ')'
 
 
 class ExtraInformation(Base):
@@ -448,7 +466,7 @@ class StoreMaterial(Base):
 
 # Поиск работника по его логину и паролю
 def search_employee(login, passwd):
-    engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+    engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
     Session = alc.orm.sessionmaker(engine)
     session = Session()
     try:
@@ -462,7 +480,7 @@ def search_employee(login, passwd):
 # Класс для взаимодействия с бд для менеджера
 class ManagerConnection:
     def __init__(self, manager_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.session = self.Session()
@@ -615,7 +633,7 @@ class ManagerConnection:
             # Определение номера заказа
             order_number = session.query(alc.func.max(Order.order_number)).first()[0] + 1
             session.add(Order(order_number, values[10], client_id, model_id,
-                              values[9], date.today(), date.today(), 1, material_id))
+                              values[9], date.today(), date.today(), material_id))
             session.commit()
 
             # print(*session.query(Order).all(), sep='\n')
@@ -730,11 +748,20 @@ class ManagerConnection:
         finally:
             session.close()
 
+    # Завершение заказа
+    def complete_order(self, order_number):
+        session = self.Session()
+        try:
+            session.query(Order).filter_by(order_number=order_number).update({Order.status: 7})
+            session.commit()
+        finally:
+            session.close()
+
 
 # Класс для взаимодействия с бд для работника
 class WorkerConnection:
     def __init__(self, worker_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.session = self.Session()
@@ -824,6 +851,7 @@ class WorkerConnection:
         finally:
             session.close()
 
+    # Передача заказа другому работнику
     def send_order_to_another(self, order_number):
         session = self.Session()
         try:
@@ -902,7 +930,7 @@ class WorkerConnection:
 # Класс для взаимодействия с бд для снабженца
 class SupplierConnection:
     def __init__(self, supplier_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.supplier_id = supplier_id
@@ -912,9 +940,9 @@ class SupplierConnection:
         try:
             material = []
             for record in session.query(InformationAboutMaterial, StoreMaterial).join(StoreMaterial):
-                material.append([record.InformationAboutMaterial.material_id, record.InformationAboutMaterial.color,\
-                      record.InformationAboutMaterial.diameter_of_the_strand, record.InformationAboutMaterial.type,\
-                      record.StoreMaterial.amount])
+                material.append([record.InformationAboutMaterial.material_id, record.InformationAboutMaterial.color,
+                                 record.InformationAboutMaterial.diameter_of_the_strand,
+                                 record.InformationAboutMaterial.type, record.StoreMaterial.amount])
             return material
         except Exception as x:
             print(x)
@@ -927,10 +955,11 @@ class SupplierConnection:
             request = []
             for record in session.query(Request, InformationAboutMaterial, RequestStatuses)\
                     .join(InformationAboutMaterial).join(RequestStatuses):
-                request.append([record.Request.request_number, str(record.InformationAboutMaterial.type) + ' ' + \
-                        str(record.InformationAboutMaterial.color) + ' ' + str(record.InformationAboutMaterial. \
-                        diameter_of_the_strand) + ' мм', record.Request.amount_of_material, record.Request.start_date,
-                        record.Request.end_date, record.RequestStatuses.status_name])
+                request.append([record.Request.request_number, str(record.InformationAboutMaterial.type) + ' ' +
+                                str(record.InformationAboutMaterial.color) + ' '
+                                + str(record.InformationAboutMaterial.diameter_of_the_strand)
+                                + ' мм', record.Request.amount_of_material, record.Request.start_date,
+                                record.Request.end_date, record.RequestStatuses.status_name])
             return request
         except Exception as x:
             print(x)
@@ -951,10 +980,11 @@ class SupplierConnection:
         session = self.Session()
         try:
             delivery = []
-            for record in session.query(Delivery, DeliveryStatuses, Provider).filter_by(contract_number = delivery_number). \
+            for record in session.query(Delivery, DeliveryStatuses, Provider).\
+                    filter_by(contract_number=delivery_number).\
                     join(DeliveryStatuses).join(ProviderDeliver).join(Provider):
-                delivery.append([record.Delivery.contract_number, record.Provider.company_name, 'txt', record.Delivery.material_id,
-                     record.DeliveryStatuses.status_name])
+                delivery.append([record.Delivery.contract_number, record.Provider.company_name, 'txt',
+                                 record.Delivery.material_id, record.DeliveryStatuses.status_name])
             delivery_diction = {}
             for record in session.query(InformationAboutMaterial):
                 delivery_diction[record.material_id] = str(record.type) + ' ' + str(record.color) + ' ' + str(
@@ -968,8 +998,7 @@ class SupplierConnection:
     def get_end_data_application_info(self, number):
         session = self.Session()
         try:
-            for record in session.query(Request).filter_by(request_number=number[0]):
-                print(record.end_date)
+            record = session.query(Request).filter_by(request_number=number).first()
             return record.end_date
         finally:
             session.close()
@@ -977,33 +1006,13 @@ class SupplierConnection:
     def update_end_date_bd(self, text, end_date):
         session = self.Session()
         try:
-            print(1)
             end_date = date(*map(int, end_date.split('-')))
             session.query(Request).filter_by(request_number=text).update({Request.end_date: end_date})
             session.commit()
-            print(5)
         finally:
             session.close()
 
-engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
-Session = alc.orm.sessionmaker(engine)
-session = Session()
-for record in session.query(Request).filter_by(request_number = 3):
-    print(record.end_date)
-'''
-x = []
-for record in session.query(Delivery, DeliveryStatuses, Provider).filter_by(contract_number = 5). \
-        join(DeliveryStatuses).join(ProviderDeliver).join(Provider):
-        x.append([record.Delivery.contract_number, record.Provider.company_name, 'txt', record.Delivery.material_id,
-               record.DeliveryStatuses.status_name])
-a = {}
-for record in session.query(InformationAboutMaterial):
-    a[record.material_id] = str(record.type) + ' ' + str(record.color)+ ' ' + str(record.diameter_of_the_strand) + ' мм'
 
-t = []
-for i in x:
-    i[3] = a[i[3]]
-print(x)'''
 # engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
 # Session = alc.orm.sessionmaker(engine)
 # session = Session()
@@ -1011,18 +1020,8 @@ print(x)'''
 # worker_con = WorkerConnection(2)
 # worker_con.get_order_material(1)
 
-
 # def show_workers(*args):
 #     print(args)
 
 # manager_con = ManagerConnection(1)
 # manager_con.send_order_to_worker(1)
-
-# print(*(item.employee_id for item in session.query(RejectedByEmployeeOrder).filter_by(order_number=1)))
-
-# rejected_workers = [item.employee_id for item in
-#                     session.query(RejectedByEmployeeOrder).filter_by(order_number=1)]
-
-# potential_workers = [item.employee_id for item in
-#                      session.query(Employee).filter(Employee.status == 2,
-#                      ~Employee.employee_id.in_(rejected_workers))]

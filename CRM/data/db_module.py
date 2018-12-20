@@ -466,7 +466,7 @@ class StoreMaterial(Base):
 
 # Поиск работника по его логину и паролю
 def search_employee(login, passwd):
-    engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+    engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
     Session = alc.orm.sessionmaker(engine)
     session = Session()
     try:
@@ -480,7 +480,7 @@ def search_employee(login, passwd):
 # Класс для взаимодействия с бд для менеджера
 class ManagerConnection:
     def __init__(self, manager_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.session = self.Session()
@@ -761,7 +761,7 @@ class ManagerConnection:
 # Класс для взаимодействия с бд для работника
 class WorkerConnection:
     def __init__(self, worker_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.session = self.Session()
@@ -906,6 +906,7 @@ class WorkerConnection:
         finally:
             session.close()
 
+
     def send_request(self, info):
         session = self.Session()
         try:
@@ -930,11 +931,12 @@ class WorkerConnection:
 # Класс для взаимодействия с бд для снабженца
 class SupplierConnection:
     def __init__(self, supplier_id):
-        self.engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
+        self.engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
         self.Session = alc.orm.sessionmaker(self.engine)
         Base.metadata.create_all(self.engine)
         self.supplier_id = supplier_id
 
+    # Получить информацию с склада
     def get_store_info(self):
         session = self.Session()
         try:
@@ -949,6 +951,7 @@ class SupplierConnection:
         finally:
             session.close()
 
+    # Получить информацию о заявках
     def get_application_info(self):
         session = self.Session()
         try:
@@ -966,6 +969,7 @@ class SupplierConnection:
         finally:
             session.close()
 
+    # Получить информацию о поставках
     def get_supply_info(self):
         session = self.Session()
         try:
@@ -976,6 +980,40 @@ class SupplierConnection:
         finally:
             session.close()
 
+    # Изменить статус у заявки
+    def update_status_request(self, number, status):
+        session = self.Session()
+        try:
+            session.query(Request).filter_by(request_number=number).update({Request.status: status})
+            session.commit()
+        except Exception as x:
+            print(x)
+        finally:
+            session.close()
+
+    # Изменить статус у поставки
+    def update_status_delivery(self, number):
+        session = self.Session()
+        try:
+            session.query(Delivery).filter_by(contract_number=number).update({Delivery.status: '3'})
+            session.commit()
+        except Exception as x:
+            print(x)
+        finally:
+            session.close()
+
+    # Отмена поставки
+    def cancel_delivery(self, number):
+        session = self.Session()
+        try:
+            session.query(Delivery).filter_by(contract_number=number).delete()
+            session.commit()
+        except Exception as x:
+            print(x)
+        finally:
+            session.close()
+
+    # Получить дополнительную информацию о поставке
     def get_more_supply_info(self, delivery_number):
         session = self.Session()
         try:
@@ -983,7 +1021,7 @@ class SupplierConnection:
             for record in session.query(Delivery, DeliveryStatuses, Provider).\
                     filter_by(contract_number=delivery_number).\
                     join(DeliveryStatuses).join(ProviderDeliver).join(Provider):
-                delivery.append([record.Delivery.contract_number, record.Provider.company_name, 'txt',
+                delivery.append([record.Delivery.contract_number, record.Provider.company_name, record.Delivery.path_to_document,
                                  record.Delivery.material_id, record.DeliveryStatuses.status_name])
             delivery_diction = {}
             for record in session.query(InformationAboutMaterial):
@@ -992,9 +1030,12 @@ class SupplierConnection:
             for records in delivery:
                 records[3] = delivery_diction[records[3]]
             return delivery[0]
+        except Exception as x:
+            print(x)
         finally:
             session.close()
 
+    # Получить дату окончание заявки
     def get_end_data_application_info(self, number):
         session = self.Session()
         try:
@@ -1003,6 +1044,7 @@ class SupplierConnection:
         finally:
             session.close()
 
+    # Изменить дату окончание заявки
     def update_end_date_bd(self, text, end_date):
         session = self.Session()
         try:
@@ -1012,10 +1054,47 @@ class SupplierConnection:
         finally:
             session.close()
 
+    # Получить информацию со склада
+    def get_info_add_supply(self):
+        session = self.Session()
+        try:
+            info = []
+            for record in session.query(InformationAboutMaterial):
+                info.append([record.type, record.color, record.diameter_of_the_strand])
+            return info
+        finally:
+            session.close()
 
-# engine = alc.create_engine("mysql+pymysql://root:Hunter_0197@localhost/crmpi", echo=False)
-# Session = alc.orm.sessionmaker(engine)
-# session = Session()
+    def add_new_application(self, text):
+        session = self.Session()
+        try:
+            mat_id = session.query(InformationAboutMaterial).filter_by(type = text[4], color = text[5],
+                                                              diameter_of_the_strand = text[6]).first()
+            session.add(Delivery(text[0], text[1], mat_id.material_id, text[2], 1, date.today(), date.today(), text[3]))
+            xyu = session.query(Provider).filter_by(product = mat_id.type).first()
+
+            session.add(ProviderDeliver(xyu.provider_id, text[1]))
+            session.commit()
+        except Exception as x:
+            print(x)
+        finally:
+            session.close()
+
+    def get_comboboxes_info(self, type):
+        session = self.Session()
+        try:
+            info = []
+            for record in session.query(InformationAboutMaterial).filter_by(type = type):
+                info.append([record.color, record.diameter_of_the_strand])
+            return info
+        finally:
+            session.close()
+
+
+
+engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
+Session = alc.orm.sessionmaker(engine)
+session = Session()
 
 # worker_con = WorkerConnection(2)
 # worker_con.get_order_material(1)
@@ -1025,3 +1104,23 @@ class SupplierConnection:
 
 # manager_con = ManagerConnection(1)
 # manager_con.send_order_to_worker(1)
+
+try:
+    info = []
+    for record in session.query(InformationAboutMaterial):
+        info.append([record.type, record.color, record.diameter_of_the_strand])
+    print(info)
+    multitude_type = []
+    multitude_color = []
+    multitude_diameter = []
+    for i in range(len(info)):
+        multitude_type.append(info[i][0])
+        multitude_color.append(info[i][1])
+        multitude_diameter.append(info[i][2])
+    multitude_type = set(multitude_type)
+    multitude_color = set(multitude_color)
+    multitude_diameter = set(multitude_diameter)
+    print(multitude_type, multitude_color, multitude_diameter)
+finally:
+    session.close()
+

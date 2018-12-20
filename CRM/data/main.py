@@ -60,31 +60,34 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Переход к необходимому окну в зависимости от должности работника
     def next_window(self):
-        hash_var = hashlib.md5()
-        hash_var.update(self.ui.password_text.text().encode('utf-8'))
-        pass_hex = hash_var.hexdigest()
-        employee_info = db.search_employee(self.ui.login_text.text(), pass_hex)
-        # Если такой записи нет в базе данных, появляется ошибка
         try:
-            if employee_info is None:
-                self.error_window.show()
-            elif employee_info[0] == 1:
-                self.ui = ManagerMainWindow(employee_info[1])
-                self.ui.setupUi(self)
-                self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
-                self.ui.reinit()
-            elif employee_info[0] == 2:
-                self.ui = WorkerMainWindow(employee_info[1])
-                self.ui.setupUi(self)
-                self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
-                self.ui.reinit()
-            elif employee_info[0] == 3:
-                self.ui = SupplierMainWindow(employee_info[1])
-                self.ui.setupUi(self)
-                self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
-                self.ui.reinit()
-            else:
-                print("!")
+            hash_var = hashlib.md5()
+            hash_var.update(self.ui.password_text.text().encode('utf-8'))
+            pass_hex = hash_var.hexdigest()
+            employee_info = db.search_employee(self.ui.login_text.text(), pass_hex)
+            # Если такой записи нет в базе данных, появляется ошибка
+            try:
+                if employee_info is None:
+                    self.error_window.show()
+                elif employee_info[0] == 1:
+                    self.ui = ManagerMainWindow(employee_info[1])
+                    self.ui.setupUi(self)
+                    self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
+                    self.ui.reinit()
+                elif employee_info[0] == 2:
+                    self.ui = WorkerMainWindow(employee_info[1])
+                    self.ui.setupUi(self)
+                    self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
+                    self.ui.reinit()
+                elif employee_info[0] == 3:
+                    self.ui = SupplierMainWindow(employee_info[1])
+                    self.ui.setupUi(self)
+                    self.move((self.screen_width - self.width()) / 2, (self.screen_height - self.height()) / 2 - 15)
+                    self.ui.reinit()
+                else:
+                    print("!")
+            except Exception as e:
+                print(e)
         except Exception as e:
             print(e)
 
@@ -591,6 +594,8 @@ class SupplierMainWindow(UiSnabzenecWindow):
         # Окно для добавления новой поставки
         self.add_supply_window = AddSupplyWindow()
         self.add_supply_window.setWindowModality(QtCore.Qt.ApplicationModal)
+        # Переменная для хранения пути к файлу договора
+        self.contract_filename = ''
         # Окно для просмотра информации о поставке
         self.info_delivery_window = InfoDeliveryWindow()
         self.info_delivery_window.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -610,6 +615,9 @@ class SupplierMainWindow(UiSnabzenecWindow):
         self.cancel_supply_button.clicked.connect(self.cancel_supply)
         self.confirm_delivery_button.clicked.connect(self.confirm_delivery)
         self.choose_date_window.ui.confirm_button.clicked.connect(self.update_end_date)
+        self.add_supply_window.ui.type_combobox.currentIndexChanged.connect(self.fill_combobox_info)
+        self.add_supply_window.ui.choose_file_button.clicked.connect(lambda: self.select_file())
+        self.add_supply_window.ui.add_button.clicked.connect(lambda: self.add_application())
         self.fill_info_table_timer.timeout.connect(
             lambda: self.fill_table(self.db_connection.get_store_info(), self.info_table)
         )
@@ -633,9 +641,43 @@ class SupplierMainWindow(UiSnabzenecWindow):
                 table_item.setTextAlignment(QtCore.Qt.AlignCenter)
                 table.setItem(row_index, column_index, table_item)
 
+    def fill_combobox(self, combobox, values):
+        combobox.clear()
+        for value in values:
+            item = QtGui.QStandardItem(str(value))
+            item.setBackground(QtGui.QColor(255, 255, 255))
+            combobox.model().appendRow(item)
+
     # Отображение окна для добавления заказа
     def show_new_supply(self):
-        ...
+        list = self.db_connection.get_info_add_supply()
+        multitude_type = []
+        for i in range(len(list)):
+            multitude_type.append(list[i][0])
+        multitude_type = set(multitude_type)
+        self.fill_combobox(self.add_supply_window.ui.type_combobox, multitude_type)
+        self.add_supply_window.show()
+
+    def select_file(self):
+        # Если выбирается файл для текущего заказа
+        file_filter = '*.doc;;*.docx'
+        self.contract_filename = QtWidgets.QFileDialog.getOpenFileName(self.add_supply_window.ui.choose_file_button,
+                                                                         'Select File', 'C:\\', file_filter
+                                                                         )[0].split('/')[-1]
+        if self.contract_filename != '':
+            self.add_supply_window.ui.no_choose_file_lable.setText(self.contract_filename)
+
+
+    def add_application(self):
+        if self.add_supply_window.ui.contract_lineedit.text() != '':
+            if self.add_supply_window.ui.numer_lineedit.text() != '':
+                self.db_connection.add_new_application([4, self.add_supply_window.ui.contract_lineedit.text(),
+                                                        self.add_supply_window.ui.numer_lineedit.text(),
+                                                        self.contract_filename, self.add_supply_window.ui.type_combobox.currentText(),
+                                                        self.add_supply_window.ui.color_combobox.currentText(),
+                                                        self.add_supply_window.ui.diametr_combobox.currentText()])
+        self.fill_table(self.db_connection.get_supply_info(), self.supply_info_table)
+        self.add_supply_window.close()
 
     # Отображение дополнительной информации о поставке
     def show_information_delivery(self):
@@ -645,15 +687,21 @@ class SupplierMainWindow(UiSnabzenecWindow):
 
             delivery_number = self.supply_info_table.currentItem().text()
             self.supply_info_table.setCurrentCell(-1, -1)
+            try:
+                print(delivery_number)
+                for index, item in enumerate(self.db_connection.get_more_supply_info(delivery_number)):
+                    print(index, item)
+                    table_item = QtWidgets.QTableWidgetItem(str(item))
+                    table_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                    self.info_delivery_window.ui.info_table.setItem(index, 0, table_item)
 
-            for index, item in enumerate(self.db_connection.get_more_supply_info(delivery_number)):
-                table_item = QtWidgets.QTableWidgetItem(str(item))
-                table_item.setFlags(QtCore.Qt.ItemIsEnabled)
-                self.info_delivery_window.ui.info_table.setItem(index, 0, table_item)
+                self.info_delivery_window.show()
+            except Exception as x:
+                print(x)
 
-            self.info_delivery_window.show()
         else:
             ...#self.select_order_error_window.show()
+
 
     # Отображение окна для добавления даты доставке
     def show_date(self):
@@ -665,7 +713,7 @@ class SupplierMainWindow(UiSnabzenecWindow):
             self.application_info_table.setCurrentCell(-1, -1)
             self.choose_date_window.request_number = number
             self.choose_date_window.ui.end_date_text.setText(str(self.db_connection.get_end_data_application_info(number)))
-
+            self.db_connection.update_status_request(number, '3')
             self.choose_date_window.show()
         else:
             ...#self.select_order_error_window.show()
@@ -679,16 +727,47 @@ class SupplierMainWindow(UiSnabzenecWindow):
 
     # Отправить материалы
     def send_material(self):
-        ...
+        if self.application_info_table.currentItem() is not None:
+            if self.application_info_table.currentColumn() != 0:
+                self.application_info_table.setCurrentCell(self.application_info_table.currentRow(), 0)
+
+            number = self.application_info_table.currentItem().text()
+            self.application_info_table.setCurrentCell(-1, -1)
+            self.db_connection.update_status_request(number, '4')
+            self.fill_table(self.db_connection.get_application_info(), self.application_info_table)
 
     # Отмена поставки
     def cancel_supply(self):
-        ...
+        if self.supply_info_table.currentItem() is not None:
+            if self.supply_info_table.currentColumn() != 0:
+                self.supply_info_table.setCurrentCell(self.supply_info_table.currentRow(), 0)
+
+            number = self.supply_info_table.currentItem().text()
+            self.supply_info_table.setCurrentCell(-1, -1)
+            self.db_connection.cancel_delivery(number)
+            self.fill_table(self.db_connection.get_supply_info(), self.supply_info_table)
 
     # Подтвердить доставку материалов
     def confirm_delivery(self):
-        ...
+        if self.supply_info_table.currentItem() is not None:
+            if self.supply_info_table.currentColumn() != 0:
+                self.supply_info_table.setCurrentCell(self.supply_info_table.currentRow(), 0)
 
+            number = self.supply_info_table.currentItem().text()
+            self.supply_info_table.setCurrentCell(-1, -1)
+            self.db_connection.update_status_delivery(number)
+            self.fill_table(self.db_connection.get_supply_info(), self.supply_info_table)
+
+    def fill_combobox_info(self):
+        if self.add_supply_window.ui.type_combobox.currentText() != '':
+            info = self.db_connection.get_comboboxes_info(self.add_supply_window.ui.type_combobox.currentText())
+            info_color = set()
+            info_diameter = set()
+            for record in info:
+                info_color.add(record[0])
+                info_diameter.add(record[1])
+            self.fill_combobox(self.add_supply_window.ui.diametr_combobox, info_diameter)
+            self.fill_combobox(self.add_supply_window.ui.color_combobox, info_color)
 
 # Окно для сообщения о дате поставки
 class ChooseDateWindow(QtWidgets.QWidget):
@@ -717,10 +796,3 @@ class AddSupplyWindow(QtWidgets.QWidget):
         self.ui.setupUi(self)
         self.ui.cancel_button.clicked.connect(self.close)
 
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    screen_geometry = QtWidgets.QDesktopWidget().availableGeometry()
-    authorization_win = MainWindow(screen_geometry.width(), screen_geometry.height())
-    authorization_win.show()
-    sys.exit(app.exec_())

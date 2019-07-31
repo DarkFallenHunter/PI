@@ -4,7 +4,6 @@ import sqlalchemy as alc
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 import datetime
-from sqlalchemy.event import listen
 from datetime import date
 
 
@@ -1089,38 +1088,3 @@ class SupplierConnection:
             return info
         finally:
             session.close()
-
-
-
-engine = alc.create_engine("mysql+pymysql://root:root@localhost/crmpi", echo=False)
-Session = alc.orm.sessionmaker(engine)
-session = Session()
-
-# worker_con = WorkerConnection(2)
-# worker_con.get_order_material(1)
-
-# def show_workers(*args):
-#     print(args)
-
-# manager_con = ManagerConnection(1)
-# manager_con.send_order_to_worker(1)
-
-try:
-    info = []
-    for record in session.query(InformationAboutMaterial):
-        info.append([record.type, record.color, record.diameter_of_the_strand])
-    print(info)
-    multitude_type = []
-    multitude_color = []
-    multitude_diameter = []
-    for i in range(len(info)):
-        multitude_type.append(info[i][0])
-        multitude_color.append(info[i][1])
-        multitude_diameter.append(info[i][2])
-    multitude_type = set(multitude_type)
-    multitude_color = set(multitude_color)
-    multitude_diameter = set(multitude_diameter)
-    print(multitude_type, multitude_color, multitude_diameter)
-finally:
-    session.close()
-

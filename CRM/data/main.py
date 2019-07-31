@@ -330,15 +330,6 @@ class ManagerMainWindow(UiManagerWindow):
 
     # Обновление информации о заказа
     def update_order(self):
-        # print([self.need_refactoring_order_combobox.currentText(),
-        #       self.surname_text_ref.text(), self.name_text_ref.text(),
-        #       self.patronymic_text_ref.text(), self.phone_text_ref.text(),
-        #       self.email_text_ref.text(), self.refactor_filename,
-        #       self.type_of_plastic_combobox_ref.currentText(),
-        #       self.color_of_plastic_combobox_ref.currentText(),
-        #       self.additional_info_text_ref.toPlainText(),
-        #       self.short_description_text_ref.toPlainText(),
-        #       self.finale_price_label_ref.text().split()[0]])
         self.db_connection.update_order_info([self.need_refactoring_order_combobox.currentText(),
                                               self.surname_text_ref.text(), self.name_text_ref.text(),
                                               self.patronymic_text_ref.text(), self.phone_text_ref.text(),
